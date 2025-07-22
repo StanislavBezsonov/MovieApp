@@ -44,18 +44,22 @@ struct MovieListCell: View {
                     .font(.headline)
                     .lineLimit(2)
                 
-                Text(viewModel.formattedReleaseDate)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                HStack(spacing: 8) {                    
+                    CircularRatingView(rating: viewModel.voteAverageValue)
+                    
+                    Text(viewModel.formattedReleaseDate)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
                 
                 Text(viewModel.overview)
                     .font(.body)
                     .lineLimit(4)
                     .foregroundColor(.secondary)
-                
-                Spacer()
             }
         }
         .padding(.vertical, 8)
     }
 }
+
+

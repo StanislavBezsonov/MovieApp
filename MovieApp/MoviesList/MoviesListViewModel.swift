@@ -8,6 +8,12 @@ final class MoviesListViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var searchText: String = ""
     
+    let category: MovieCategory
+    
+    init(category: MovieCategory) {
+        self.category = category
+    }
+    
     var filteredMovies: [Movie] {
         if searchText.isEmpty {
             return movies
@@ -19,13 +25,14 @@ final class MoviesListViewModel: ObservableObject {
     
     func loadMovies() async {
         isLoading = true
-        errorMessage = nil
+        defer { isLoading = false }
+        
         do {
-            movies = try await MovieService.shared.fetchNowPlayingMovies()
+            movies = try await MovieService.shared.fetchMovies(for: category)
+            errorMessage = nil
         } catch {
             errorMessage = "Failed to load movies: \(error.localizedDescription)"
         }
-        isLoading = false
     }
 }
 

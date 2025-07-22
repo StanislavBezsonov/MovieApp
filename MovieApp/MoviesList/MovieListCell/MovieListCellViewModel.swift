@@ -25,12 +25,8 @@ class MovieListCellViewModel: ObservableObject, Identifiable {
         return "N/A"
     }
     
-    var voteAverage: String {
-        if let vote = movie.voteAverage {
-            return String(format: "%.1f", vote)
-        } else {
-            return "N/A"
-        }
+    var voteAverageValue: Double {
+        movie.voteAverage ?? 0.0
     }
     
     init(movie: Movie) {

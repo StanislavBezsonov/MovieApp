@@ -25,7 +25,7 @@ enum MovieServiceError: Error {
 private enum Endpoint {
     static let apiKey = ProcessInfo.processInfo.environment["TMDB_API_KEY"] ?? ""
     static let baseURL = "https://api.themoviedb.org/3"
-    static let language = "en-US"
+    static let language = "en_US"
     static let defaultPage = "1"
 }
 
@@ -59,10 +59,6 @@ final class MovieService: MovieServiceProtocol {
 
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
             throw MovieServiceError.serverError(statusCode: (response as? HTTPURLResponse)?.statusCode ?? -1)
-        }
-
-        if let jsonString = String(data: data, encoding: .utf8) {
-            print("Raw JSON response from \(endpoint):\n\(jsonString)")
         }
         
         let decoder = JSONDecoder()
@@ -121,5 +117,22 @@ final class MovieService: MovieServiceProtocol {
     func fetchPopularActors() async throws -> [Actor] {
         let response: PopularActorsResponse = try await fetch(from: "/person/popular")
         return response.results
+    }
+}
+
+extension MovieService {
+    func fetchMovies(for category: MovieCategory) async throws -> [Movie] {
+        switch category {
+        case .nowPlaying:
+            return try await fetchNowPlayingMovies()
+        case .upcoming:
+            return try await fetchUpcomingMovies()
+        case .popular:
+            return try await fetchPopularMovies()
+        case .topRated:
+            return try await fetchTopRatedMovies()
+        case .trending:
+            return try await fetchTrendingMovies()
+        }
     }
 }
