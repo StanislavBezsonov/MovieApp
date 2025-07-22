@@ -9,11 +9,12 @@ import SwiftUI
 
 @main
 struct MovieAppApp: App {
-//    let persistenceController = PersistenceController.shared
-
+    @StateObject private var coordinator = AppCoordinator()
+    
     var body: some Scene {
         WindowGroup {
-            MoviesCategoriesView()
+            RootView()
+                .environmentObject(coordinator)
         }
     }
 }

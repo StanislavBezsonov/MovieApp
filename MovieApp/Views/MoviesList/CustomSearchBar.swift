@@ -17,6 +17,7 @@ struct CustomSearchBar: View {
                 .textInputAutocapitalization(.none)
         }
         .padding(.horizontal)
+        .padding(.bottom, 12)
     }
 }
 
