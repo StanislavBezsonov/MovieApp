@@ -1,33 +1,21 @@
 import SwiftUI
 
 struct MovieListCell: View {
-    let movie: Movie
-    private let imageWidth: CGFloat = 100
-    private let imageHeight: CGFloat = 150
-
-    private var placeholderImage: some View {
+    @ObservedObject var viewModel: MovieListCellViewModel
+    
+    let imageWidth: CGFloat = 100
+    let imageHeight: CGFloat = 150
+    var placeholderImage: some View {
         Image(systemName: "photo")
             .resizable()
             .scaledToFit()
-            .frame(width: imageWidth, height: imageHeight)
+            .frame(width: 100, height: 150)
             .foregroundColor(.gray)
-    }
-    
-    private func formattedDate(from string: String?) -> String? {
-        guard let string = string else { return nil }
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        if let date = formatter.date(from: string) {
-            formatter.dateStyle = .medium
-            return formatter.string(from: date)
-        }
-        return nil
     }
     
     var body: some View {
         HStack(alignment: .top, spacing: 16) {
-            if let posterPath = movie.posterPath,
-               let url = URL(string: "https://image.tmdb.org/t/p/w200\(posterPath)") {
+            if let url = viewModel.posterURL {
                 AsyncImage(url: url) { phase in
                     switch phase {
                     case .empty:
@@ -50,23 +38,20 @@ struct MovieListCell: View {
                 placeholderImage
             }
             
+            
             VStack(alignment: .leading, spacing: 6) {
-                Text(movie.title)
+                Text(viewModel.title)
                     .font(.headline)
                     .lineLimit(2)
                 
-                if let dateString = formattedDate(from: movie.releaseDate) {
-                    Text(dateString)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
+                Text(viewModel.formattedReleaseDate)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
                 
-                if let overview = movie.overview {
-                    Text(overview)
-                        .font(.body)
-                        .lineLimit(4)
-                        .foregroundColor(.secondary)
-                }
+                Text(viewModel.overview)
+                    .font(.body)
+                    .lineLimit(4)
+                    .foregroundColor(.secondary)
                 
                 Spacer()
             }

@@ -7,7 +7,7 @@ struct MoviesListView: View {
         TabView {
             NavigationView {
                     List(viewModel.filteredMovies) { movie in
-                        MovieListCell(movie: movie)
+                        MovieListCell(viewModel: MovieListCellViewModel(movie: movie))
                     }
                     .listStyle(PlainListStyle())
                     .navigationTitle(Text("Movies"))
