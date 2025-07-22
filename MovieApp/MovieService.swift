@@ -23,7 +23,7 @@ enum MovieServiceError: Error {
 // MARK: - API Constants
 
 private enum Endpoint {
-    static let apiKey = "ba92ea49a7e4f37a609ddd31b519f83a"
+    static let apiKey = ProcessInfo.processInfo.environment["TMDB_API_KEY"] ?? ""
     static let baseURL = "https://api.themoviedb.org/3"
     static let language = "en-US"
     static let defaultPage = "1"
