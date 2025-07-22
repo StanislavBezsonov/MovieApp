@@ -53,7 +53,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "TMDB_API_KEY"
-            value = "ba92ea49a7e4f37a609ddd31b519f83a"
+            value = "c642b2bf366c7d396b116e07e682faff"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
