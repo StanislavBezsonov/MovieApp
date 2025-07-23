@@ -3,8 +3,8 @@ import SwiftUI
 struct MoviesListView: View {
     @StateObject private var viewModel: MoviesListViewModel
 
-    init(category: MovieCategory) {
-        _viewModel = StateObject(wrappedValue: MoviesListViewModel(category: category))
+    init(category: MovieCategory, movieService: MovieServiceProtocol = Current.movieService) {
+        _viewModel = StateObject(wrappedValue: MoviesListViewModel(category: category, movieService: movieService))
     }
 
     var body: some View {
@@ -30,9 +30,9 @@ struct MoviesListView: View {
                         .padding()
                 }
             }
-            .task {
-                await viewModel.loadMovies()
-            }
+        }
+        .onAppear {
+            viewModel.onViewAppeared()
         }
     }
 }

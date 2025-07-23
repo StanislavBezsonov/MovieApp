@@ -6,7 +6,7 @@ struct MoviesHorizontalListView: View {
         List {
             ForEach(MovieCategory.allCases) { category in
                 MovieHorizontalListCell(
-                    viewModel: MovieHorizontalListCellViewModel(category: category),
+                    category: category,
                     onSeeAll: {
                         print("Tapped See All for \(category.rawValue)")
                     }
@@ -16,6 +16,6 @@ struct MoviesHorizontalListView: View {
             }
         }
         .listStyle(.plain)
-        .navigationTitle(Text("Movies"))
+        .navigationTitle(Text("Movies"));
     }
 }

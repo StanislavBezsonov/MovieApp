@@ -1,6 +1,6 @@
 import Foundation
 
-struct Movie: Codable, Identifiable, Equatable {
+struct Movie: Identifiable, Equatable {
     let id: Int
     let title: String
     let overview: String?
@@ -8,12 +8,12 @@ struct Movie: Codable, Identifiable, Equatable {
     let releaseDate: String?
     let voteAverage: Double?
     
-    enum CodingKeys: String, CodingKey {
-        case id
-        case title
-        case overview
-        case posterPath = "poster_path"
-        case releaseDate = "release_date"
-        case voteAverage = "vote_average"
+    init(dto: MovieDTO) {
+        self.id = dto.id
+        self.title = dto.title
+        self.overview = dto.overview
+        self.posterPath = dto.posterPath
+        self.releaseDate = dto.releaseDate
+        self.voteAverage = dto.voteAverage
     }
 }

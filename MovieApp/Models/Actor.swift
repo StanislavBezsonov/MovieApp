@@ -1,13 +1,13 @@
-struct Actor: Codable, Identifiable {
+struct Actor: Identifiable {
     let id: Int
     let name: String
     let profilePath: String?
     let popularity: Double
     
-    enum CodingKeys: String, CodingKey {
-        case id
-        case name
-        case profilePath = "profile_path"
-        case popularity
+    init(dto: ActorDTO) {
+        self.id = dto.id
+        self.name = dto.name
+        self.profilePath = dto.profilePath
+        self.popularity = dto.popularity        
     }
 }

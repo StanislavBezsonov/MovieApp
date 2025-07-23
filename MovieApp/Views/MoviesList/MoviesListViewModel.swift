@@ -9,9 +9,11 @@ final class MoviesListViewModel: ObservableObject {
     @Published var searchText: String = ""
     
     let category: MovieCategory
+    private let movieService: MovieServiceProtocol
     
-    init(category: MovieCategory) {
+    init(category: MovieCategory, movieService: MovieServiceProtocol) {
         self.category = category
+        self.movieService = movieService
     }
     
     var filteredMovies: [Movie] {
@@ -23,13 +25,18 @@ final class MoviesListViewModel: ObservableObject {
         }
     }
     
-    func loadMovies() async {
+    func onViewAppeared() {
+        Task {
+            await loadMovies()
+        }
+    }
+    
+    private func loadMovies() async {
         isLoading = true
         defer { isLoading = false }
         
         do {
-            movies = try await MovieService.shared.fetchMovies(for: category)
-            errorMessage = nil
+            movies = try await movieService.fetchMovies(for: category)
         } catch {
             errorMessage = "Failed to load movies: \(error.localizedDescription)"
         }

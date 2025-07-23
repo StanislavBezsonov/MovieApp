@@ -1,8 +1,15 @@
 import SwiftUI
 
 struct MovieHorizontalListCell: View {
-    @StateObject var viewModel: MovieHorizontalListCellViewModel
+    @StateObject private var viewModel: MovieHorizontalListCellViewModel
     let onSeeAll: () -> Void
+    
+    init(category: MovieCategory,
+         movieService: MovieServiceProtocol = Current.movieService,
+         onSeeAll: @escaping () -> Void) {
+        _viewModel = StateObject(wrappedValue: MovieHorizontalListCellViewModel(category: category, movieService: movieService))
+        self.onSeeAll = onSeeAll
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -33,6 +40,9 @@ struct MovieHorizontalListCell: View {
                     .padding(.horizontal)
                 }
             }
+        }
+        .onAppear {
+            viewModel.onViewAppeared()
         }
     }
 }
