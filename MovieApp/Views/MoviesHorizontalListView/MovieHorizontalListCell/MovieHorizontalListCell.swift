@@ -1,13 +1,13 @@
 import SwiftUI
 
 struct MovieHorizontalListCell: View {
-    @StateObject private var viewModel: MovieHorizontalListCellViewModel
+    @StateObject private var viewModel: MovieHorizontalListCellModel
     let onSeeAll: () -> Void
     
     init(category: MovieCategory,
          movieService: MovieServiceProtocol = Current.movieService,
          onSeeAll: @escaping () -> Void) {
-        _viewModel = StateObject(wrappedValue: MovieHorizontalListCellViewModel(category: category, movieService: movieService))
+        _viewModel = StateObject(wrappedValue: MovieHorizontalListCellModel(category: category, movieService: movieService))
         self.onSeeAll = onSeeAll
     }
     

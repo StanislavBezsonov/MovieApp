@@ -12,8 +12,8 @@ struct MoviesListView: View {
             List {
                 Section(header: CustomSearchBar(searchText: $viewModel.searchText)) {
                     ForEach(viewModel.filteredMovies) { movie in
-                        NavigationLink(destination: MovieDetailView(movie: movie)) {
-                            MovieListCell(viewModel: MovieListCellViewModel(movie: movie))
+                        NavigationLink(destination: MovieDetailView(movieId: movie.id)) {
+                            MovieListCell(viewModel: MovieListCellModel(movie: movie))
                         }
                     }
                 }

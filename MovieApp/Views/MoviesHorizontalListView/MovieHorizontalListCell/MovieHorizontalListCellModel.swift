@@ -1,7 +1,7 @@
 import Foundation
 
 @MainActor
-class MovieHorizontalListCellViewModel: ObservableObject, Identifiable {
+class MovieHorizontalListCellModel: ObservableObject, Identifiable {
     let category: MovieCategory
     private let movieService: MovieServiceProtocol
     

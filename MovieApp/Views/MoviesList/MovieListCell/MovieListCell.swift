@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct MovieListCell: View {
-    @ObservedObject var viewModel: MovieListCellViewModel
+    @ObservedObject var viewModel: MovieListCellModel
     
     let imageWidth: CGFloat = 100
     let imageHeight: CGFloat = 150

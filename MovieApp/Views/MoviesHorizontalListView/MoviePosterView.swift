@@ -9,7 +9,7 @@ struct MoviePosterView: View {
     var body: some View {
         VStack(alignment: .center) {
             if let posterPath = movie.posterPath,
-               let url = URL(string: "https://image.tmdb.org/t/p/w200/\(posterPath)") {
+               let url = movie.posterURL {
                 AsyncImage(url: url) { phase in
                     switch phase {
                     case .empty:

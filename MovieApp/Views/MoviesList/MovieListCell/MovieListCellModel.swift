@@ -1,6 +1,6 @@
 import Foundation
 
-class MovieListCellViewModel: ObservableObject, Identifiable {
+class MovieListCellModel: ObservableObject, Identifiable {
     private let movie: Movie
     
     var id: Int { movie.id }
