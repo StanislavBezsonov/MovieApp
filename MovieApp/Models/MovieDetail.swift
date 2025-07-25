@@ -15,7 +15,9 @@ struct MovieDetail {
     let keywords: [Keyword]?
     let cast: [CastMember]?
     let crew: [CrewMember]?
+    let reviews: [Review]?
     let similarMovies: [Movie]?
+    let recommendedMovies: [Movie]?
     let images: MovieImages?
 
     init(
@@ -24,7 +26,9 @@ struct MovieDetail {
         cast: [CastMember]?,
         crew: [CrewMember]?,
         similarMovies: [Movie]?,
-        images: MovieImages?
+        recommendedMovies: [Movie]?,
+        images: MovieImages?,
+        reviews: [Review]?
     ) {
         self.id = dto.id
         self.title = dto.title
@@ -40,7 +44,9 @@ struct MovieDetail {
         self.keywords = keywords
         self.cast = cast
         self.crew = crew
+        self.reviews = reviews
         self.similarMovies = similarMovies
+        self.recommendedMovies = recommendedMovies
         self.images = images
     }
 }

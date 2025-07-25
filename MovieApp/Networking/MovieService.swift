@@ -37,8 +37,8 @@ final class MovieService: MovieServiceProtocol {
     
     init() {}
     
-    private func fetch<T: Decodable>(from endpoint: String, as type: T.Type = T.self, queryItems: [URLQueryItem] = []) async throws -> T {
-        guard let url = makeURL(endpoint: endpoint, queryItems: queryItems) else {
+    private func fetch<T: Decodable>(from endpoint: String, as type: T.Type = T.self, queryItems: [URLQueryItem] = [],     includeDefaultQueryItems: Bool = true) async throws -> T {
+        guard let url = makeURL(endpoint: endpoint, queryItems: queryItems, includeDefaultQueryItems: includeDefaultQueryItems) else {
             throw MovieServiceError.invalidURL
         }
         
@@ -57,13 +57,22 @@ final class MovieService: MovieServiceProtocol {
         }
     }
     
-    private func makeURL(endpoint: String, queryItems: [URLQueryItem]) -> URL? {
+    private func makeURL(endpoint: String, queryItems: [URLQueryItem], includeDefaultQueryItems: Bool = true) -> URL? {
         var components = URLComponents(string: Endpoint.baseURL + endpoint)
-        var allItems = [
-            URLQueryItem(name: "api_key", value: Endpoint.apiKey),
-            URLQueryItem(name: "language", value: Endpoint.language),
-            URLQueryItem(name: "page", value: Endpoint.defaultPage)
-        ]
+        var allItems: [URLQueryItem] = []
+            
+        if includeDefaultQueryItems {
+            allItems = [
+                URLQueryItem(name: "api_key", value: Endpoint.apiKey),
+                URLQueryItem(name: "language", value: Endpoint.language),
+                URLQueryItem(name: "page", value: Endpoint.defaultPage)
+            ]
+        } else {
+            allItems = [
+                URLQueryItem(name: "api_key", value: Endpoint.apiKey)
+            ]
+        }
+        
         allItems.append(contentsOf: queryItems)
         components?.queryItems = allItems
         return components?.url
@@ -133,21 +142,27 @@ final class MovieService: MovieServiceProtocol {
         async let keywordsDTO = fetch(from: "/movie/\(id)/keywords", as: KeywordsResponse.self)
         async let creditsDTO = fetch(from: "/movie/\(id)/credits", as: CreditsResponse.self)
         async let similarDTO = fetch(from: "/movie/\(id)/similar", as: MovieResponse.self)
-        async let imagesDTO = fetch(from: "/movie/\(id)/images", as: MovieImagesDTO.self)
+        async let recommendedDTO = fetch(from: "/movie/\(id)/recommendations", as: MovieResponse.self)
         
-        let (detail, keywords, credits, similar, images) = try await (detailDTO, keywordsDTO, creditsDTO, similarDTO, imagesDTO)
+        let queryItems = [URLQueryItem(name: "include_image_language", value: "en,null")]
+        let imagesDTO = try await fetch(from: "/movie/\(id)/images", as: MovieImagesDTO.self, queryItems: queryItems, includeDefaultQueryItems: false)
+                                        
+        async let reviewsDTO = fetch(from: "/movie/\(id)/reviews", as: ReviewsResponse.self)
         
+        let (detail, keywords, credits, similar, recommended, images, reviews) = try await (detailDTO, keywordsDTO, creditsDTO, similarDTO, recommendedDTO, imagesDTO, reviewsDTO)
+
         return MovieDetail(
             dto: detail,
             keywords: keywords.keywords.isEmpty ? nil : keywords.keywords.map { Keyword(dto: $0) },
             cast: credits.cast.isEmpty ? nil : credits.cast.map { CastMember(dto: $0) },
             crew: credits.crew.isEmpty ? nil : credits.crew.map { CrewMember(dto: $0) },
             similarMovies: similar.results.isEmpty ? nil : similar.results.map { Movie(dto: $0) },
+            recommendedMovies: recommended.results.isEmpty ? nil : recommended.results.map { Movie(dto: $0) },
             images: (images.posters.isEmpty && images.backdrops.isEmpty) ? nil : MovieImages(
                 posters: images.posters.map { ImageData(dto: $0) },
                 backdrops: images.backdrops.map { ImageData(dto: $0) }
-            )
+            ),
+            reviews: reviews.results.isEmpty ? nil : reviews.results.map { Review(dto: $0) }
         )
-        
     }
 }

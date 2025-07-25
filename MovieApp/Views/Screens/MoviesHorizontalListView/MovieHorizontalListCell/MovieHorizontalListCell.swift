@@ -34,7 +34,7 @@ struct MovieHorizontalListCell: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 12) {
                         ForEach(viewModel.movies) { movie in
-                            MoviePosterView(movie: movie)
+                            MoviePosterCell(movie: movie)
                         }
                     }
                     .padding(.horizontal)

@@ -1,14 +1,14 @@
 import SwiftUI
 
-struct MoviePosterView: View {
-    let movie: Movie
-    
-    private let imageWidth: CGFloat = 100
-    private let imageHeight: CGFloat = 150
-    
+struct BackdropImageCell: View {
+    let imageURL: URL?
+
+    private let imageWidth: CGFloat = 270
+    private let imageHeight: CGFloat = 153
+
     var body: some View {
-        VStack(alignment: .center) {
-            if let url = movie.posterURL {
+        ZStack {
+            if let url = imageURL {
                 AsyncImage(url: url) { phase in
                     switch phase {
                     case .empty:
@@ -20,20 +20,20 @@ struct MoviePosterView: View {
                             .scaledToFill()
                             .frame(width: imageWidth, height: imageHeight)
                             .clipped()
-                            .cornerRadius(8)
+                            .cornerRadius(12)
                     case .failure:
-                        placeholderImage
+                        placeholder
                     @unknown default:
                         EmptyView()
                     }
                 }
             } else {
-                placeholderImage
+                placeholder
             }
         }
     }
-    
-    private var placeholderImage: some View {
+
+    private var placeholder: some View {
         Image(systemName: "photo")
             .resizable()
             .scaledToFit()
@@ -41,4 +41,3 @@ struct MoviePosterView: View {
             .foregroundColor(.gray)
     }
 }
-

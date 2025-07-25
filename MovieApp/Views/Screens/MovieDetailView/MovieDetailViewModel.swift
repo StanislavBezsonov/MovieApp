@@ -33,3 +33,28 @@ final class MovieDetailViewModel: ObservableObject {
         }
     }
 }
+
+extension MovieDetail {
+    var hasReviews: Bool {
+        return reviews?.isEmpty == false
+    }
+    var reviewsCountText: String {
+        return "Reviews: \(reviews?.count ?? 0)"
+    }
+    var hasSimilarMovies: Bool {
+        return similarMovies?.isEmpty == false
+    }
+    var hasRecommendedMovies: Bool {
+        return recommendedMovies?.isEmpty == false
+    }
+    var hasPosters: Bool {
+        return images?.posters.isEmpty == false
+    }
+    var hasBackdrops: Bool {
+        return images?.backdrops.isEmpty == false
+    }
+    
+    var director: CrewMember? {
+        return crew?.first(where: { $0.job == "Director" })
+    }
+}

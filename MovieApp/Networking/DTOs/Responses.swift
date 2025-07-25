@@ -15,5 +15,9 @@ struct CreditsResponse: Codable {
     let crew: [CrewMemberDTO]
 }
 
+struct ReviewsResponse: Codable {
+    let results: [ReviewDTO]
+}
+
 
 
