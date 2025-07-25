@@ -2,6 +2,7 @@ import SwiftUI
 
 struct CircularRatingView: View {
     let rating: Double
+    let textColor: Color
 
     var body: some View {
         ZStack {
@@ -19,6 +20,7 @@ struct CircularRatingView: View {
 
             Text(String(format: "%.1f", rating))
                 .font(.caption)
+                .foregroundColor(textColor)
                 .bold()
         }
         .frame(width: 35, height: 35)

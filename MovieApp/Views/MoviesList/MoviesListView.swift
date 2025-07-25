@@ -8,31 +8,32 @@ struct MoviesListView: View {
     }
 
     var body: some View {
-        VStack {
-            List {
-                Section(header: CustomSearchBar(searchText: $viewModel.searchText)) {
-                    ForEach(viewModel.filteredMovies) { movie in
-                        NavigationLink(destination: MovieDetailView(movieId: movie.id)) {
-                            MovieListCell(viewModel: MovieListCellModel(movie: movie))
+        NavigationView {
+            VStack {
+                List {
+                    CustomSearchBar(searchText: $viewModel.searchText).listRowInsets(EdgeInsets())
+                        ForEach(viewModel.filteredMovies) { movie in
+                            NavigationLink(destination: MovieDetailView(movieId: movie.id)) {
+                                MovieListCell(viewModel: MovieListCellModel(movie: movie))
+                            }
                         }
+                }
+                .listStyle(PlainListStyle())
+                .overlay {
+                    if viewModel.isLoading {
+                        ProgressView()
+                    }
+                    if let errorMessage = viewModel.errorMessage {
+                        Text(errorMessage)
+                            .foregroundColor(.red)
+                            .multilineTextAlignment(.center)
+                            .padding()
                     }
                 }
             }
-            .listStyle(PlainListStyle())
-            .overlay {
-                if viewModel.isLoading {
-                    ProgressView()
-                }
-                if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
-                        .foregroundColor(.red)
-                        .multilineTextAlignment(.center)
-                        .padding()
-                }
+            .onAppear {
+                viewModel.onViewAppeared()
             }
-        }
-        .onAppear {
-            viewModel.onViewAppeared()
         }
     }
 }

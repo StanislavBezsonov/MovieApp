@@ -5,6 +5,7 @@ struct MovieDetailDTO: Codable {
     let posterPath: String?
     let releaseDate: String?
     let voteAverage: Double?
+    let voteCount: Int?
     let runtime: Int?
     let status: String?
     let genres: [GenreDTO]
@@ -15,6 +16,7 @@ struct MovieDetailDTO: Codable {
         case posterPath = "poster_path"
         case releaseDate = "release_date"
         case voteAverage = "vote_average"
+        case voteCount = "vote_count"
         case productionCountries = "production_countries"
     }
 }

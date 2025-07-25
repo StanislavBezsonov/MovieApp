@@ -12,20 +12,37 @@ struct MovieDetailView: View {
 
     var body: some View {
         VStack {
-            List {
-                if let details = viewModel.movieDetail {
-                    Text(details.title)                    
+            if viewModel.isLoading {
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.red)
+                    .multilineTextAlignment(.center)
+                    .padding()
+            } else if let details = viewModel.movieDetail {
+                List {
+                    MovieDetailCell(movie: details)
+                        .listRowInsets(EdgeInsets())
+                        .listRowSeparator(.hidden)
+                    MovieActionCell()
+                    
+                    if let overview = viewModel.movieDetail?.overview {
+                        OverviewCell(overview: overview)
+                    }
+                        
+                    Section {
+                        if let keywords = details.keywords {
+                            KeywordsCell(keywords: keywords)
+                        }
+                    }
                 }
+                .navigationTitle(details.title)
+                .navigationBarTitleDisplayMode(.large)
             }
+        }
+        .onAppear {
+            viewModel.onViewAppeared()
         }
     }
 }
-
-
-struct MovieDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        MovieDetailView(movieId: 1)
-    }
-}
-
-

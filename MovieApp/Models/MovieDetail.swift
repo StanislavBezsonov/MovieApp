@@ -7,6 +7,7 @@ struct MovieDetail {
     let posterURL: URL?
     let releaseDate: Date?
     let voteAverage: Double?
+    let voteCount: Int?
     let runtime: Int?
     let status: String?
     let genres: [Genre]?
@@ -31,6 +32,7 @@ struct MovieDetail {
         self.posterURL = dto.posterPath.flatMap { URL(string: "https://image.tmdb.org/t/p/w500\($0)") }
         self.releaseDate = dto.releaseDate.flatMap { DateHelper.date(from: $0) }
         self.voteAverage = dto.voteAverage
+        self.voteCount = dto.voteCount
         self.runtime = dto.runtime
         self.status = dto.status
         self.genres = dto.genres.isEmpty ? nil : dto.genres.map { Genre(dto: $0) }
@@ -42,3 +44,4 @@ struct MovieDetail {
         self.images = images
     }
 }
+
