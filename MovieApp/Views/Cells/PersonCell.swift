@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct PersonCellView: View {
+struct PersonCell: View {
     let imageURL: URL?
     let name: String
     let subtitle: String?

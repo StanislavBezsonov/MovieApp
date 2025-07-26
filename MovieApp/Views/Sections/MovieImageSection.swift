@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct MovieImageSectionView<Content: View>: View {
+struct MovieImageSection<Content: View>: View {
     let title: String
     let images: [ImageData]
     let cellBuilder: (URL) -> Content

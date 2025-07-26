@@ -4,6 +4,7 @@ struct MovieDetailView: View {
     let movieId: Int
     
     @StateObject private var viewModel: MovieDetailViewModel
+    @EnvironmentObject private var coordinator: AppCoordinator
     
     init(movieId: Int, movieService: MovieServiceProtocol = Current.movieService) {
         self.movieId = movieId
@@ -29,9 +30,17 @@ struct MovieDetailView: View {
                         .listRowInsets(EdgeInsets())
                     
                     if details.hasReviews {
-                        Text(details.reviewsCountText)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                        NavigationLink(
+                            destination: {
+                                if let reviews = details.reviews {
+                                    ReviewsView(reviews: reviews)
+                                }
+                            },
+                            label: {
+                                Text(details.reviewsCountText)
+                                    .font(.subheadline)
+                            }
+                        )
                     }
                     
                     if let overview = viewModel.movieDetail?.overview {
@@ -45,22 +54,14 @@ struct MovieDetailView: View {
                                 .listRowInsets(EdgeInsets())
                         }
                         
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Cast")
-                                .font(.headline)
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 12) {
-                                    if let cast = viewModel.movieDetail?.cast {
-                                        ForEach(cast) { person in
-                                            PersonCellView(imageURL: person.profileURL, name: person.name, subtitle: person.character)
-                                                .listRowInsets(EdgeInsets())
-                                        }
-                                    }
-                                }
-                            }
-                            .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                        if let cast = viewModel.movieDetail?.cast {
+                            PeopleHorizontalSection(
+                                title: "Cast",
+                                people: cast.toPersonDisplayModels(),
+                                onSeeAllTapped: { viewModel.seeAllCastTapped() }
+                            )
                         }
-                            
+                        
                         if let director = details.director {
                             HStack {
                                 Text("Director:")
@@ -68,55 +69,57 @@ struct MovieDetailView: View {
                                 Text(director.name)
                             }
                         }
-                            
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Crew")
-                                .font(.headline)
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 12) {
-                                    if let crew = viewModel.movieDetail?.crew {
-                                        ForEach(crew) { person in
-                                            PersonCellView(imageURL: person.profileURL, name: person.name, subtitle: person.job)
-                                                .listRowInsets(EdgeInsets())
-                                        }
-                                    }
-                                }
-                            }
-                            .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                        
+                        if let crew = viewModel.movieDetail?.crew {
+                            PeopleHorizontalSection(
+                                title: "Crew",
+                                people: crew.toPersonDisplayModels(),
+                                onSeeAllTapped: { viewModel.seeAllCrewTapped() }
+                            )
                         }
-                                
-                                if let details = viewModel.movieDetail {
-                                    
-                                    if details.hasSimilarMovies, let similar = details.similarMovies {
-                                        MovieHorizontalSectionView(title: "Similar Movies", movies: similar)
-                                    }
-                                    
-                                    if details.hasRecommendedMovies, let recommended = details.recommendedMovies {
-                                        MovieHorizontalSectionView(title: "Recommended", movies: recommended)
-                                    }
-                                    
-                                    if details.hasPosters, let posters = details.images?.posters {
-                                        MovieImageSectionView(title: "Other Posters", images: posters) { url in
-                                            PosterImageCell(imageURL: url)
-                                        }
-                                    }
-                                    
-                                    if details.hasBackdrops, let backdrops = details.images?.backdrops {
-                                        MovieImageSectionView(title: "Images", images: backdrops) { url in
-                                            BackdropImageCell(imageURL: url)
-                                        }
-                                    }
-                                }
-                                
+                        
+                        if let details = viewModel.movieDetail {
+                            
+                            if details.hasSimilarMovies, let similar = details.similarMovies {
+                                MovieHorizontalSection(
+                                    title: "Similar Movies",
+                                    movies: similar,
+                                    onSeeAllTapped: { viewModel.seeAllSimilarTapped()}
+                                )
                             }
                             
+                            if details.hasRecommendedMovies, let recommended = details.recommendedMovies {
+                                MovieHorizontalSection(
+                                    title: "Recommended Movies",
+                                    movies: recommended,
+                                    onSeeAllTapped: { viewModel.seeAllRecommendedTapped()}
+                                )
+                            }
+                            
+                            
+                            if details.hasPosters, let posters = details.images?.posters {
+                                MovieImageSection(title: "Other Posters", images: posters) { url in
+                                    PosterImageCell(imageURL: url)
+                                }
+                            }
+                            
+                            if details.hasBackdrops, let backdrops = details.images?.backdrops {
+                                MovieImageSection(title: "Images", images: backdrops) { url in
+                                    BackdropImageCell(imageURL: url)
+                                }
+                            }
                         }
-                        .navigationTitle(details.title)
-                        .navigationBarTitleDisplayMode(.large)
+                        
                     }
+                    
                 }
-                .onAppear {
-                    viewModel.onViewAppeared()
-                }
+                .navigationTitle(details.title)
+                .navigationBarTitleDisplayMode(.large)
             }
         }
+        .onAppear {
+            viewModel.setCoordinator(coordinator)
+            viewModel.onViewAppeared()
+        }
+    }
+}

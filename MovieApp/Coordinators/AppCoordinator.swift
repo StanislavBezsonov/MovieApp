@@ -2,15 +2,23 @@ import SwiftUI
 
 @MainActor
 class AppCoordinator: ObservableObject {
+    
+    enum ActiveScreen: Hashable {
+        case movieDetail(movieId: Int)
+        case castList(cast: [PersonDisplayModel])
+        case crewList(crew: [PersonDisplayModel])
+        case similarMovies(movies: [Movie])
+        case recommendedMovies(movies: [Movie])
+    }
+    
     enum DisplayMode {
         case verticalList
         case horizontalList
     }
 
+    @Published var path: [ActiveScreen] = []
     @Published var selectedCategory: MovieCategory = .nowPlaying
     @Published var displayMode: DisplayMode = .verticalList
-    @Published var selectedMovie: Movie? = nil
-    @Published var isShowingSettings: Bool = false
     
     func toggleDisplayMode() {
         displayMode = (displayMode == .verticalList) ? .horizontalList : .verticalList
@@ -20,19 +28,31 @@ class AppCoordinator: ObservableObject {
         selectedCategory = category
     }
     
-    func showDetails(for movie: Movie) {
-        selectedMovie = movie
+    func showMovieDetail(movieId: Int) {
+        path.append(.movieDetail(movieId: movieId))
     }
     
-    func closeDetails() {
-        selectedMovie = nil
+    func showCastList(_ cast: [PersonDisplayModel]) {
+        path.append(.castList(cast: cast))
     }
     
-    func showSettings() {
-        isShowingSettings = true
+    func showCrewList(_ crew: [PersonDisplayModel]) {
+        path.append(.crewList(crew: crew))
     }
     
-    func closeSettings() {
-        isShowingSettings = false
+    func showSimilarMovies(_ movies: [Movie]) {
+        path.append(.similarMovies(movies: movies))
+    }
+    
+    func showRecommendedMovies(_ movies: [Movie]) {
+        path.append(.recommendedMovies(movies: movies))
+    }
+
+    func closeLastScreen() {
+        _ = path.popLast()
+    }
+
+    func resetToRoot() {
+        path = []
     }
 }

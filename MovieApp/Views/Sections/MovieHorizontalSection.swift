@@ -1,13 +1,21 @@
 import SwiftUI
 
-struct MovieHorizontalSectionView: View {
+struct MovieHorizontalSection: View {
     let title: String
     let movies: [Movie]
+    let onSeeAllTapped: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(.headline)
+            HStack {
+                Text(title)
+                    .font(.headline)
+                Spacer()
+                Button("See All") {
+                    onSeeAllTapped()
+                }
+                .font(.subheadline)
+            }
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
@@ -17,11 +25,10 @@ struct MovieHorizontalSectionView: View {
                             title: movie.title,
                             rating: movie.voteAverage
                         )
-                        .listRowInsets(EdgeInsets())
                     }
                 }
-                .padding(.horizontal, 8)
             }
         }
     }
 }
+

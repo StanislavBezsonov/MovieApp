@@ -9,7 +9,8 @@ final class MovieDetailViewModel: ObservableObject {
     
     private let movieId: Int
     private let movieService: MovieServiceProtocol
-    
+    weak var coordinator: AppCoordinator? = nil
+
     init(movieId: Int, movieService: MovieServiceProtocol) {
         self.movieId = movieId
         self.movieService = movieService
@@ -21,6 +22,10 @@ final class MovieDetailViewModel: ObservableObject {
         }
     }
     
+    func setCoordinator(_ coordinator: AppCoordinator) {
+        self.coordinator = coordinator
+    }
+    
     private func loadMovieDetails() async {
         isLoading = true
         defer { isLoading = false }
@@ -30,6 +35,38 @@ final class MovieDetailViewModel: ObservableObject {
         }
         catch {
             errorMessage = "Failed to load movie details: \(error.localizedDescription)"
+        }
+    }
+    
+    // MARK: - Navigation actions
+    
+    func seeAllCastTapped() {
+        guard let cast = movieDetail?.cast else { return }
+        let peopleModels = cast.map {
+            PersonDisplayModel(imageURL: $0.profileURL, name: $0.name, subtitle: $0.character)
+        }
+        coordinator?.showCastList(peopleModels)
+    }
+
+    func seeAllCrewTapped() {
+        guard let crew = movieDetail?.crew else { return }
+        let peopleModels = crew.map {
+            PersonDisplayModel(imageURL: $0.profileURL, name: $0.name, subtitle: $0.job)
+        }
+        coordinator?.showCastList(peopleModels)
+    }
+    
+    func seeAllSimilarTapped() {
+        guard let similar = movieDetail?.similarMovies else { return }
+        if let coordinator = coordinator {
+            coordinator.showSimilarMovies(similar)
+        }
+    }
+    
+    func seeAllRecommendedTapped() {
+        guard let recommended = movieDetail?.recommendedMovies else { return }
+        if let coordinator = coordinator {
+            coordinator.showRecommendedMovies(recommended)
         }
     }
 }
