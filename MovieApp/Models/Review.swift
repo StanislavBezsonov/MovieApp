@@ -1,4 +1,4 @@
-struct Review: Identifiable {
+struct Review: Identifiable, Equatable, Hashable {
     let id: String
     let author: String
     let content: String

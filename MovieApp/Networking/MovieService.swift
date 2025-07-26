@@ -11,6 +11,7 @@ protocol MovieServiceProtocol {
     func fetchMovies(for category: MovieCategory) async throws -> [Movie]
     func fetchGenres() async throws -> [Genre]
     func fetchMovieDetail(id: Int) async throws -> MovieDetail
+    func fetchMoviesByKeyword(_ keywordId: Int) async throws -> [Movie]
 //    func fetchPopularActors() async throws -> [Actor]
 }
 
@@ -164,5 +165,15 @@ final class MovieService: MovieServiceProtocol {
             ),
             reviews: reviews.results.isEmpty ? nil : reviews.results.map { Review(dto: $0) }
         )
+    }
+    
+    func fetchMoviesByKeyword(_ keywordId: Int) async throws -> [Movie] {
+        let queryItems = [
+            URLQueryItem(name: "with_keywords", value: String(keywordId)),
+            URLQueryItem(name: "sort_by", value: "popularity.desc")
+        ]
+        let response: MovieResponse = try await fetch(from: "/discover/movie", queryItems: queryItems)
+        let movies = response.results.map { Movie(dto: $0) }
+        return movies
     }
 }

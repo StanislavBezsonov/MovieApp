@@ -5,6 +5,8 @@ class AppCoordinator: ObservableObject {
     
     enum ActiveScreen: Hashable {
         case movieDetail(movieId: Int)
+        case reviews(reviews: [Review])
+        case moviesByKeyword(keyword: Keyword)
         case castList(cast: [PersonDisplayModel])
         case crewList(crew: [PersonDisplayModel])
         case similarMovies(movies: [Movie])
@@ -30,6 +32,14 @@ class AppCoordinator: ObservableObject {
     
     func showMovieDetail(movieId: Int) {
         path.append(.movieDetail(movieId: movieId))
+    }
+    
+    func showReviews(_ reviews: [Review]) {
+        path.append(.reviews(reviews: reviews))
+    }
+    
+    func showMoviesByKeyword(keyword: Keyword) {
+        path.append(.moviesByKeyword(keyword: keyword))
     }
     
     func showCastList(_ cast: [PersonDisplayModel]) {

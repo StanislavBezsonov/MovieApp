@@ -30,17 +30,12 @@ struct MovieDetailView: View {
                         .listRowInsets(EdgeInsets())
                     
                     if details.hasReviews {
-                        NavigationLink(
-                            destination: {
-                                if let reviews = details.reviews {
-                                    ReviewsView(reviews: reviews)
-                                }
-                            },
-                            label: {
-                                Text(details.reviewsCountText)
-                                    .font(.subheadline)
-                            }
-                        )
+                        Button {
+                            viewModel.showReviewsTapped()
+                        } label: {
+                            Text(details.reviewsCountText)
+                                .font(.subheadline)
+                        }
                     }
                     
                     if let overview = viewModel.movieDetail?.overview {
@@ -50,8 +45,10 @@ struct MovieDetailView: View {
                     
                     Section {
                         if let keywords = details.keywords {
-                            KeywordsCell(keywords: keywords)
-                                .listRowInsets(EdgeInsets())
+                            KeywordsCell(keywords: keywords) { keyword in
+                                viewModel.keywordTapped(keyword)
+                            }
+                            .listRowInsets(EdgeInsets())
                         }
                         
                         if let cast = viewModel.movieDetail?.cast {

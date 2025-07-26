@@ -28,6 +28,10 @@ struct RootView: View {
                 switch screen {
                 case .movieDetail(let movieId):
                     MovieDetailView(movieId: movieId)
+                case .reviews(let reviews):
+                    ReviewsView(reviews: reviews)
+                case .moviesByKeyword(let keyword):
+                    KeywordSearchResultsView(keyword: keyword)
                 case .similarMovies(let movies):
                     SimpleMovieListView(title: "Similar Movies", movies: movies)
                 case .recommendedMovies(let movies):

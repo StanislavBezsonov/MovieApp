@@ -1,4 +1,4 @@
-struct Keyword: Identifiable, Equatable {
+struct Keyword: Identifiable, Equatable, Hashable {
     let id: Int
     let name: String
     

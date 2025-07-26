@@ -6,9 +6,7 @@ struct SimpleMovieListView: View {
 
     var body: some View {
         List(movies) { movie in
-            NavigationLink(destination: MovieDetailView(movieId: movie.id)) {
-                MovieListCell(viewModel: MovieListCellModel(movie: movie))
-            }
+            MovieListCell(viewModel: MovieListCellModel(movie: movie))            
         }
         .navigationTitle(title)
         .listStyle(PlainListStyle())

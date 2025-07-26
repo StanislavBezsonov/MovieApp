@@ -2,6 +2,7 @@ import SwiftUI
 
 struct KeywordsCell: View {
     let keywords: [Keyword]
+    let onKeywordTapped: (Keyword) -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -12,12 +13,23 @@ struct KeywordsCell: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 10) {
                     ForEach(keywords) { keyword in
-                        Text(keyword.name)
+                        Button(action: {
+                            onKeywordTapped(keyword)
+                        }) {
+                            HStack(spacing: 8) {
+                                Text(keyword.name)
+                                    .font(.subheadline)
+                                    .foregroundColor(.primary)
+                                Image(systemName: "chevron.right")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                            }
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)
                             .background(Color.gray.opacity(0.2))
                             .cornerRadius(12)
-                            .font(.subheadline)
+                        }
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
                 .padding(.horizontal)

@@ -40,6 +40,15 @@ final class MovieDetailViewModel: ObservableObject {
     
     // MARK: - Navigation actions
     
+    func showReviewsTapped() {
+        guard let reviews = movieDetail?.reviews else { return }
+        coordinator?.showReviews(reviews)
+    }
+    
+    func keywordTapped(_ keyword: Keyword) {
+        coordinator?.showMoviesByKeyword(keyword: keyword)
+    }
+    
     func seeAllCastTapped() {
         guard let cast = movieDetail?.cast else { return }
         let peopleModels = cast.map {
