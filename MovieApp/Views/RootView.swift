@@ -8,9 +8,9 @@ struct RootView: View {
             VStack(spacing: 0) {
                 switch coordinator.displayMode {
                 case .verticalList:
-                    MoviesCategoriesView()
+                    MoviesCategoriesView(coordinator: coordinator)
                 case .horizontalList:
-                    MoviesHorizontalListView()
+                    MoviesCategoriesHorizontalView(coordinator: coordinator)
                 }
             }
             .navigationTitle(coordinator.selectedCategory.rawValue)
@@ -27,21 +27,21 @@ struct RootView: View {
             .navigationDestination(for: AppCoordinator.ActiveScreen.self) { screen in
                 switch screen {
                 case .movieDetail(let movieId):
-                    MovieDetailView(movieId: movieId)
+                    MovieDetailView(movieId: movieId, coordinator: coordinator)
                 case .reviews(let reviews):
                     ReviewsView(reviews: reviews)
                 case .moviesByKeyword(let keyword):
-                    KeywordSearchResultsView(keyword: keyword)
+                    KeywordSearchResultsView(keyword: keyword, coordinator: coordinator)
                 case .similarMovies(let movies):
-                    MoviePreviewListView(title: "Similar Movies", movies: movies)
+                    MoviePreviewListView(title: "Similar Movies", movies: movies, coordinator: coordinator)
                 case .recommendedMovies(let movies):
-                    MoviePreviewListView(title: "Recommended Movies", movies: movies)
+                    MoviePreviewListView(title: "Recommended Movies", movies: movies, coordinator: coordinator)
                 case .castList(let cast):
-                    PeoplePreviewListView(title: "Cast", people: cast)
+                    PeoplePreviewListView(title: "Cast", people: cast, coordinator: coordinator)
                 case .crewList(let crew):
-                    PeoplePreviewListView(title: "Crew", people: crew)
+                    PeoplePreviewListView(title: "Crew", people: crew, coordinator: coordinator)
                 case .personDetail(let personId):
-                    PersonDetailView(personId: personId)
+                    PersonDetailView(personId: personId, coordinator: coordinator)
 
                 }
             }

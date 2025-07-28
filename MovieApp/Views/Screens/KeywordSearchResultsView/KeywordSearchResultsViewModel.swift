@@ -8,13 +8,21 @@ class KeywordSearchResultsViewModel: ObservableObject {
 
     private let keyword: Keyword
     private let movieService: MovieServiceProtocol
+    weak var coordinator: AppCoordinator? = nil
 
-    init(keyword: Keyword, movieService: MovieServiceProtocol = Current.movieService) {
+    init(keyword: Keyword, movieService: MovieServiceProtocol = Current.movieService, coordinator: AppCoordinator? = nil) {
         self.keyword = keyword
         self.movieService = movieService
+        self.coordinator = coordinator
     }
 
-    func loadMovies() async {
+    func onViewAppeared() {
+        Task {
+            await loadMovies()
+        }
+    }
+    
+    private func loadMovies() async {
         isLoading = true
         defer { isLoading = false }
 
@@ -23,5 +31,9 @@ class KeywordSearchResultsViewModel: ObservableObject {
         } catch {
             errorMessage = "Failed to load movies for \(keyword.name): \(error.localizedDescription)"
         }
+    }
+    
+    func movieTapped(_ movie: Movie) {
+        coordinator?.showMovieDetail(movieId: movie.id)
     }
 }

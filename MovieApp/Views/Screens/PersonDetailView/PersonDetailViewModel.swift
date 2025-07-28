@@ -16,9 +16,10 @@ final class PersonDetailViewModel: ObservableObject {
         groupMoviesByYear(movies)
     }
     
-    init(personId: Int, movieService: MovieServiceProtocol) {
+    init(personId: Int, movieService: MovieServiceProtocol, coordinator: AppCoordinator?) {
         self.personId = personId
         self.movieService = movieService
+        self.coordinator = coordinator
     }
     
     func onViewAppear() {
@@ -27,11 +28,7 @@ final class PersonDetailViewModel: ObservableObject {
         }
     }
     
-    func setCoordinator(_ coordinator: AppCoordinator) {
-        self.coordinator = coordinator
-    }
-    
-    func loadPersonDetails() async {
+    private func loadPersonDetails() async {
         isLoading = true
         defer { isLoading = false }
         
@@ -46,6 +43,10 @@ final class PersonDetailViewModel: ObservableObject {
         } catch {
             errorMessage = "Failed to load person details: \(error.localizedDescription)"
         }
+    }
+    
+    func onMovieTapped(_ movie: Movie) {
+        coordinator?.showMovieDetail(movieId: movie.id)
     }
     
     func groupMoviesByYear(_ movies: [Movie]) -> [(year: String, movies: [Movie])] {

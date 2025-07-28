@@ -2,10 +2,9 @@ import SwiftUI
 
 struct MoviesListView: View {
     @StateObject private var viewModel: MoviesListViewModel
-    @EnvironmentObject private var coordinator: AppCoordinator
     
-    init(category: MovieCategory, movieService: MovieServiceProtocol = Current.movieService) {
-        _viewModel = StateObject(wrappedValue: MoviesListViewModel(category: category, movieService: movieService))
+    init(category: MovieCategory, movieService: MovieServiceProtocol = Current.movieService, coordinator: AppCoordinator? = nil) {
+        _viewModel = StateObject(wrappedValue: MoviesListViewModel(category: category, movieService: movieService, coordinator: coordinator))
     }
     
     var body: some View {
@@ -13,11 +12,14 @@ struct MoviesListView: View {
             List {
                 CustomSearchBar(searchText: $viewModel.searchText).listRowInsets(EdgeInsets())
                 ForEach(viewModel.filteredMovies) { movie in
-                    MovieListCell(viewModel: MovieListCellModel(movie: movie))
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            coordinator.showMovieDetail(movieId: movie.id)
-                        }
+                    MovieListCell(
+                        viewModel: MovieListCellModel(
+                            movie: movie,                                                                onMoviePressed: {                                                                    viewModel.movieTapped(movie)
+                                }
+                        )
+                    )
+                    .contentShape(Rectangle())
+
                 }
             }
             .listStyle(PlainListStyle())

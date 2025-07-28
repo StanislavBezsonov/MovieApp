@@ -11,3 +11,9 @@ extension Array where Element == CrewMember {
         self.map { PersonDisplayModel(personId: $0.id, imageURL: $0.profileURL, name: $0.name, subtitle: $0.job) }
     }
 }
+
+extension CrewMember {
+    func toPersonDisplayModel() -> PersonDisplayModel {
+        PersonDisplayModel(personId: id, imageURL: profileURL, name: name, subtitle: job)
+    }
+}

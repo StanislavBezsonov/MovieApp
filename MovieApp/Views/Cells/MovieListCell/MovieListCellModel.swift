@@ -29,7 +29,14 @@ class MovieListCellModel: ObservableObject, Identifiable {
         movie.voteAverage ?? 0.0
     }
     
-    init(movie: Movie) {
+    private let onMoviePressed: () -> Void
+    
+    init(movie: Movie, onMoviePressed: @escaping () -> Void = {}) {
         self.movie = movie
+        self.onMoviePressed = onMoviePressed
+    }
+    
+    func moviePressed() {
+        onMoviePressed()
     }
 }

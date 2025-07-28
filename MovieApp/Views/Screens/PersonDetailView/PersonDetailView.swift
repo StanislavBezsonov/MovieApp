@@ -5,9 +5,9 @@ struct PersonDetailView: View {
     
     @StateObject private var viewModel: PersonDetailViewModel
     
-    init(personId: Int, movieService: MovieServiceProtocol = Current.movieService) {
+    init(personId: Int, movieService: MovieServiceProtocol = Current.movieService, coordinator: AppCoordinator) {
         self.personId = personId
-        _viewModel = StateObject(wrappedValue: PersonDetailViewModel(personId: personId, movieService: movieService))
+        _viewModel = StateObject(wrappedValue: PersonDetailViewModel(personId: personId, movieService: movieService, coordinator: coordinator))
     }
     
     var body: some View {
@@ -36,7 +36,9 @@ struct PersonDetailView: View {
                     ForEach(viewModel.moviesByYear, id: \.year) { year, movies in
                         Section(header: Text("\(year)").font(.headline)) {
                             ForEach(movies) { movie in
-                                PersonMoviesCell(movie: movie)
+                                PersonMoviesCell(movie: movie) {
+                                    viewModel.onMovieTapped(movie)
+                                }
                             }
                         }
                     }

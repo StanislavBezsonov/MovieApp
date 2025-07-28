@@ -1,17 +1,21 @@
 import SwiftUI
 
 struct MoviesCategoriesView: View {
-    @State private var selectedCategory: MovieCategory = .allCases.first!
-    
+    @StateObject private var viewModel: MoviesCategoriesViewModel
+
+    init(coordinator: AppCoordinator) {
+        _viewModel = StateObject(wrappedValue: MoviesCategoriesViewModel(coordinator: coordinator))
+    }
+
     var body: some View {
-        TabView(selection: $selectedCategory) {
+        TabView(selection: $viewModel.selectedCategory) {
             ForEach(MovieCategory.allCases, id: \.self) { category in
-                MoviesListView(category: category)
+                MoviesListView(category: category, coordinator: viewModel.coordinator)
                     .tag(category)
             }
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
-        .navigationTitle(selectedCategory.rawValue)
+        .navigationTitle(viewModel.selectedCategory.rawValue)
         .navigationBarTitleDisplayMode(.inline)
     }
 }

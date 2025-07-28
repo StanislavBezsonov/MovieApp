@@ -11,19 +11,16 @@ final class MovieDetailViewModel: ObservableObject {
     private let movieService: MovieServiceProtocol
     weak var coordinator: AppCoordinator? = nil
 
-    init(movieId: Int, movieService: MovieServiceProtocol) {
+    init(movieId: Int, movieService: MovieServiceProtocol, coordinator: AppCoordinator?) {
         self.movieId = movieId
         self.movieService = movieService
+        self.coordinator = coordinator
     }
     
     func onViewAppeared() {
         Task {
             await loadMovieDetails()
         }
-    }
-    
-    func setCoordinator(_ coordinator: AppCoordinator) {
-        self.coordinator = coordinator
     }
     
     private func loadMovieDetails() async {
@@ -50,6 +47,10 @@ final class MovieDetailViewModel: ObservableObject {
 
     func personTapped(_ person: PersonDisplayModel) {
         coordinator?.showPersonDetail(personId: person.personId)
+    }
+    
+    func movieTapped(_ movie: Movie) {
+        coordinator?.showMovieDetail(movieId: movie.id)
     }
     
     func seeAllCastTapped() {

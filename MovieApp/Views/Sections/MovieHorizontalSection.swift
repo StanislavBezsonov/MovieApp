@@ -4,6 +4,7 @@ struct MovieHorizontalSection: View {
     let title: String
     let movies: [Movie]
     let onSeeAllTapped: () -> Void
+    let onMovieTapped: (Movie) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -20,7 +21,12 @@ struct MovieHorizontalSection: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
                     ForEach(movies) { movie in
-                        MoviePreviewCell(movie: movie)
+                        Button(action: {
+                            onMovieTapped(movie)
+                        }) {
+                            MoviePreviewCell(movie: movie)
+                        }
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
             }

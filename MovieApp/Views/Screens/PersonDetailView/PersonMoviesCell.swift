@@ -2,6 +2,7 @@ import SwiftUI
 
 struct PersonMoviesCell: View {
     let movie: Movie
+    let onMovieTapped: () -> Void
     
     let imageWidth: CGFloat = 90
     let imageHeight: CGFloat = 135
@@ -32,6 +33,10 @@ struct PersonMoviesCell: View {
                 }
             }
             .frame(maxHeight: imageHeight, alignment: .center)
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            onMovieTapped()
         }
     }
 }

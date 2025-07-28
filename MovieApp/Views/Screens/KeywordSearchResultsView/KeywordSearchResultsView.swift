@@ -4,9 +4,9 @@ struct KeywordSearchResultsView: View {
     let keyword: Keyword
     @StateObject private var viewModel: KeywordSearchResultsViewModel
 
-    init(keyword: Keyword) {
+    init(keyword: Keyword, coordinator: AppCoordinator? = nil) {
         self.keyword = keyword
-        _viewModel = StateObject(wrappedValue: KeywordSearchResultsViewModel(keyword: keyword))
+        _viewModel = StateObject(wrappedValue: KeywordSearchResultsViewModel(keyword: keyword, coordinator: coordinator))
     }
 
     var body: some View {
@@ -21,14 +21,21 @@ struct KeywordSearchResultsView: View {
                     .padding()
             } else {
                 List(viewModel.movies) { movie in
-                    MovieListCell(viewModel: MovieListCellModel(movie: movie))
+                    MovieListCell(
+                        viewModel: MovieListCellModel(
+                            movie: movie,
+                            onMoviePressed: { [weak viewModel] in
+                                viewModel?.movieTapped(movie)
+                            }
+                        )
+                    )
                 }
                 .listStyle(PlainListStyle())
             }
         }
         .navigationTitle(keyword.name)
-        .task {
-            await viewModel.loadMovies()
+        .onAppear {
+            viewModel.onViewAppeared()
         }
     }
 }

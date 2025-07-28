@@ -4,11 +4,10 @@ struct MovieDetailView: View {
     let movieId: Int
     
     @StateObject private var viewModel: MovieDetailViewModel
-    @EnvironmentObject private var coordinator: AppCoordinator
     
-    init(movieId: Int, movieService: MovieServiceProtocol = Current.movieService) {
+    init(movieId: Int, movieService: MovieServiceProtocol = Current.movieService, coordinator: AppCoordinator? = nil) {
         self.movieId = movieId
-        _viewModel = StateObject(wrappedValue: MovieDetailViewModel(movieId: movieId, movieService: movieService))
+        _viewModel = StateObject(wrappedValue: MovieDetailViewModel(movieId: movieId, movieService: movieService, coordinator: coordinator))
     }
     
     var body: some View {
@@ -67,6 +66,13 @@ struct MovieDetailView: View {
                                 Text("Director:")
                                     .fontWeight(.semibold)
                                 Text(director.name)
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .foregroundColor(.gray)
+                            }
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                viewModel.personTapped(director.toPersonDisplayModel())
                             }
                         }
                         
@@ -87,7 +93,10 @@ struct MovieDetailView: View {
                                 MovieHorizontalSection(
                                     title: "Similar Movies",
                                     movies: similar,
-                                    onSeeAllTapped: { viewModel.seeAllSimilarTapped()}
+                                    onSeeAllTapped: { viewModel.seeAllSimilarTapped()},
+                                    onMovieTapped: { movie in
+                                        viewModel.movieTapped(movie)
+                                    }
                                 )
                             }
                             
@@ -95,7 +104,10 @@ struct MovieDetailView: View {
                                 MovieHorizontalSection(
                                     title: "Recommended Movies",
                                     movies: recommended,
-                                    onSeeAllTapped: { viewModel.seeAllRecommendedTapped()}
+                                    onSeeAllTapped: { viewModel.seeAllRecommendedTapped()},
+                                    onMovieTapped: { movie in
+                                        viewModel.movieTapped(movie)
+                                    }
                                 )
                             }
                             
@@ -121,7 +133,6 @@ struct MovieDetailView: View {
             }
         }
         .onAppear {
-            viewModel.setCoordinator(coordinator)
             viewModel.onViewAppeared()
         }
     }

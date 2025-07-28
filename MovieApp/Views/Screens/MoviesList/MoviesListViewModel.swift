@@ -10,10 +10,13 @@ final class MoviesListViewModel: ObservableObject {
     
     let category: MovieCategory
     private let movieService: MovieServiceProtocol
+    weak var coordinator: AppCoordinator?
+
     
-    init(category: MovieCategory, movieService: MovieServiceProtocol) {
+    init(category: MovieCategory, movieService: MovieServiceProtocol, coordinator: AppCoordinator? = nil) {
         self.category = category
         self.movieService = movieService
+        self.coordinator = coordinator
     }
     
     var filteredMovies: [Movie] {
@@ -40,6 +43,10 @@ final class MoviesListViewModel: ObservableObject {
         } catch {
             errorMessage = "Failed to load movies: \(error.localizedDescription)"
         }
+    }
+    
+    func movieTapped (_ movie: Movie) {
+        coordinator?.showMovieDetail(movieId: movie.id)
     }
 }
 
