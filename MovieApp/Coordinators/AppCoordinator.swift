@@ -27,6 +27,11 @@ class AppCoordinator: ObservableObject {
         displayMode = (displayMode == .verticalList) ? .horizontalList : .verticalList
     }
     
+    func showCategory(_ category: MovieCategory) {
+        selectedCategory = category
+        displayMode = .verticalList
+    }
+    
     func selectCategory(_ category: MovieCategory) {
         selectedCategory = category
     }
