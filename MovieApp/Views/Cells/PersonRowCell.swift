@@ -43,6 +43,6 @@ struct PersonRowCell: View {
             }
             .frame(maxHeight: imageHeight, alignment: .center)
         }
-        .frame(height: imageHeight)
+        .frame(maxWidth: .infinity, minHeight: imageHeight, alignment: .leading)
     }
 }

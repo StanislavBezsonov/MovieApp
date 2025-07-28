@@ -34,6 +34,7 @@ struct PersonMoviesCell: View {
             }
             .frame(maxHeight: imageHeight, alignment: .center)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .contentShape(Rectangle())
         .onTapGesture {
             onMovieTapped()
