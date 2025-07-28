@@ -45,6 +45,7 @@ struct PersonDetailView: View {
                 }
             }
         }
+        .navigationTitle(viewModel.title)
         .onAppear {
             viewModel.onViewAppear()
         }

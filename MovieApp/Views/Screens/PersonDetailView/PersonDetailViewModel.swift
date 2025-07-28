@@ -16,6 +16,10 @@ final class PersonDetailViewModel: ObservableObject {
         groupMoviesByYear(movies)
     }
     
+    var title: String {
+        personDetail?.name ?? "Person"
+    }
+    
     init(personId: Int, movieService: MovieServiceProtocol, coordinator: AppCoordinator?) {
         self.personId = personId
         self.movieService = movieService
