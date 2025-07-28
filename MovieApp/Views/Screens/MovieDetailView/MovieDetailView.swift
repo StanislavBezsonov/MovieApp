@@ -55,7 +55,10 @@ struct MovieDetailView: View {
                             PeopleHorizontalSection(
                                 title: "Cast",
                                 people: cast.toPersonDisplayModels(),
-                                onSeeAllTapped: { viewModel.seeAllCastTapped() }
+                                onSeeAllTapped: { viewModel.seeAllCastTapped() },
+                                onPersonTapped: { person in
+                                    viewModel.personTapped(person)
+                                }
                             )
                         }
                         
@@ -71,7 +74,10 @@ struct MovieDetailView: View {
                             PeopleHorizontalSection(
                                 title: "Crew",
                                 people: crew.toPersonDisplayModels(),
-                                onSeeAllTapped: { viewModel.seeAllCrewTapped() }
+                                onSeeAllTapped: { viewModel.seeAllCrewTapped() },
+                                onPersonTapped: { person in
+                                    viewModel.personTapped(person)
+                                }
                             )
                         }
                         

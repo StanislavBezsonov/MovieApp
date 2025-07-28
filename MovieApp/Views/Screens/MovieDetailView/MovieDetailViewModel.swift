@@ -32,8 +32,7 @@ final class MovieDetailViewModel: ObservableObject {
         
         do {
             movieDetail = try await movieService.fetchMovieDetail(id: movieId)
-        }
-        catch {
+        } catch {
             errorMessage = "Failed to load movie details: \(error.localizedDescription)"
         }
     }
@@ -48,11 +47,15 @@ final class MovieDetailViewModel: ObservableObject {
     func keywordTapped(_ keyword: Keyword) {
         coordinator?.showMoviesByKeyword(keyword: keyword)
     }
+
+    func personTapped(_ person: PersonDisplayModel) {
+        coordinator?.showPersonDetail(personId: person.personId)
+    }
     
     func seeAllCastTapped() {
         guard let cast = movieDetail?.cast else { return }
         let peopleModels = cast.map {
-            PersonDisplayModel(imageURL: $0.profileURL, name: $0.name, subtitle: $0.character)
+            PersonDisplayModel(personId: $0.id, imageURL: $0.profileURL, name: $0.name, subtitle: $0.character)
         }
         coordinator?.showCastList(peopleModels)
     }
@@ -60,7 +63,7 @@ final class MovieDetailViewModel: ObservableObject {
     func seeAllCrewTapped() {
         guard let crew = movieDetail?.crew else { return }
         let peopleModels = crew.map {
-            PersonDisplayModel(imageURL: $0.profileURL, name: $0.name, subtitle: $0.job)
+            PersonDisplayModel(personId: $0.id, imageURL: $0.profileURL, name: $0.name, subtitle: $0.job)
         }
         coordinator?.showCastList(peopleModels)
     }

@@ -22,22 +22,3 @@ struct Movie: Identifiable, Equatable, Hashable {
         return URL(string: "https://image.tmdb.org/t/p/w200\(path)")
     }
 }
-
-extension MovieDTO {
-    static var mock: MovieDTO {
-        MovieDTO(
-            id: 1,
-            title: "The Matrix",
-            overview: "A computer hacker learns about the true nature of reality and his role in the war against its controllers.",
-            posterPath: "/matrix.jpg",
-            releaseDate: "1999-03-31",
-            voteAverage: 8.7
-        )
-    }
-}
-
-extension Movie {
-    static var mock: Movie {
-        Movie(dto: MovieDTO.mock)
-    }
-}

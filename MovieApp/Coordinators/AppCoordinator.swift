@@ -11,6 +11,7 @@ class AppCoordinator: ObservableObject {
         case crewList(crew: [PersonDisplayModel])
         case similarMovies(movies: [Movie])
         case recommendedMovies(movies: [Movie])
+        case personDetail(personId: Int)
     }
     
     enum DisplayMode {
@@ -56,6 +57,10 @@ class AppCoordinator: ObservableObject {
     
     func showRecommendedMovies(_ movies: [Movie]) {
         path.append(.recommendedMovies(movies: movies))
+    }
+    
+    func showPersonDetail(personId: Int) {
+        path.append(.personDetail(personId: personId))
     }
 
     func closeLastScreen() {

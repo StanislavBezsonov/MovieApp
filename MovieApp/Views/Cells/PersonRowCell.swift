@@ -1,17 +1,14 @@
 import SwiftUI
 
 struct PersonRowCell: View {
-    let imageURL: URL?
-    let name: String
-    let subtitle: String?
+    let details: PersonDisplayModel
 
-    // Константы для размеров
     private let imageWidth: CGFloat = 60
     private let imageHeight: CGFloat = 80
 
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
-            AsyncImage(url: imageURL) { phase in
+            AsyncImage(url: details.imageURL) { phase in
                 switch phase {
                 case .success(let image):
                     image
@@ -25,13 +22,20 @@ struct PersonRowCell: View {
                         .fill(Color.gray.opacity(0.3))
                         .frame(width: imageWidth, height: imageHeight)
                         .cornerRadius(8)
+                        .overlay(
+                            Image(systemName: "photo")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 40, height: 40)
+                                .foregroundColor(.gray)
+                        )
                 }
             }
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(name)
+                Text(details.name)
                     .font(.headline)
-                if let subtitle, !subtitle.isEmpty {
+                if let subtitle = details.subtitle, !subtitle.isEmpty {
                     Text(subtitle)
                         .font(.subheadline)
                         .foregroundColor(.secondary)

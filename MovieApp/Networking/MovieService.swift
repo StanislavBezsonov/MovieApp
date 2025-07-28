@@ -12,7 +12,10 @@ protocol MovieServiceProtocol {
     func fetchGenres() async throws -> [Genre]
     func fetchMovieDetail(id: Int) async throws -> MovieDetail
     func fetchMoviesByKeyword(_ keywordId: Int) async throws -> [Movie]
-//    func fetchPopularActors() async throws -> [Actor]
+    func fetchPersonById(_ id: Int) async throws -> PersonDetail
+    func fetchPersonImages(personId: Int) async throws -> PersonImages
+    func fetchMovieCredits(forPersonId id: Int) async throws -> [Movie]
+    func fetchPersonByIdRaw(_ id: Int) async throws -> PersonDTO
 }
 
 // MARK: - Custom Errors
@@ -132,12 +135,6 @@ final class MovieService: MovieServiceProtocol {
         return genres
     }
     
-    //    func fetchPopularActors() async throws -> [Actor] {
-    //        let response: PopularActorsResponse = try await fetch(from: "/person/popular")
-    //        let actors = response.results.map { Actor(dto: $0) }
-    //        return actors
-    //    }
-    
     func fetchMovieDetail(id: Int) async throws -> MovieDetail {
         async let detailDTO = fetch(from: "/movie/\(id)", as: MovieDetailDTO.self)
         async let keywordsDTO = fetch(from: "/movie/\(id)/keywords", as: KeywordsResponse.self)
@@ -175,5 +172,36 @@ final class MovieService: MovieServiceProtocol {
         let response: MovieResponse = try await fetch(from: "/discover/movie", queryItems: queryItems)
         let movies = response.results.map { Movie(dto: $0) }
         return movies
+    }
+    
+    func fetchPersonById(_ id: Int) async throws -> PersonDetail {
+        let response: PersonDTO = try await fetch(from: "/person/\(id)")
+        let person = PersonDetail(dto: response)
+        return person
+    }
+    
+    func fetchPersonByIdRaw(_ id: Int) async throws -> PersonDTO {
+        return try await fetch(from: "/person/\(id)")
+    }
+    
+    func fetchPersonImages(personId: Int) async throws -> PersonImages {
+        let dto: PersonImagesDTO = try await fetch(from: "/person/\(personId)/images")
+        let profiles = dto.profiles.map { ImageData(dto: $0) }
+        return PersonImages(profiles: profiles)
+    }
+    
+    func fetchMovieCredits(forPersonId id: Int) async throws -> [Movie] {
+        let creditsDTO: PersonMovieCreditsDTO = try await fetch(from: "/person/\(id)/movie_credits")
+        let castMovies = creditsDTO.cast
+        let crewMovies = creditsDTO.crew
+        let allMoviesDTO = castMovies + crewMovies
+
+        var uniqueMoviesDict = [Int: Movie]()
+        for dto in allMoviesDTO {
+            let movie = Movie(dto: dto)
+            uniqueMoviesDict[movie.id] = movie
+        }
+
+        return Array(uniqueMoviesDict.values)
     }
 }

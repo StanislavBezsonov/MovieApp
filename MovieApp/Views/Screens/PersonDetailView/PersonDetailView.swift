@@ -1,0 +1,50 @@
+import SwiftUI
+
+struct PersonDetailView: View {
+    let personId: Int
+    
+    @StateObject private var viewModel: PersonDetailViewModel
+    
+    init(personId: Int, movieService: MovieServiceProtocol = Current.movieService) {
+        self.personId = personId
+        _viewModel = StateObject(wrappedValue: PersonDetailViewModel(personId: personId, movieService: movieService))
+    }
+    
+    var body: some View {
+        VStack {
+            if viewModel.isLoading {
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.red)
+                    .multilineTextAlignment(.center)
+                    .padding()
+            } else if let details = viewModel.personDetail {
+                List {
+                    PersonMainDetailsCell(person: details)
+                    if let bio = details.bio {
+                        OverviewCell(overview: bio)
+                            .listRowInsets(EdgeInsets())
+                    }
+                    if let images = details.profileImages?.profiles, !images.isEmpty {
+                        MovieImageSection(title: "Images", images: images) { url in
+                            PosterImageCell(imageURL: url)
+                        }
+                    }
+                    
+                    ForEach(viewModel.moviesByYear, id: \.year) { year, movies in
+                        Section(header: Text("\(year)").font(.headline)) {
+                            ForEach(movies) { movie in
+                                PersonMoviesCell(movie: movie)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .onAppear {
+            viewModel.onViewAppear()
+        }
+    }
+}

@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct SimpleMovieListView: View {
+struct MoviePreviewListView: View {
     let title: String
     let movies: [Movie]
 

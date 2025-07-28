@@ -4,6 +4,7 @@ struct PeopleHorizontalSection: View {
     let title: String
     let people: [PersonDisplayModel]
     let onSeeAllTapped: () -> Void
+    let onPersonTapped: (PersonDisplayModel) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -20,11 +21,12 @@ struct PeopleHorizontalSection: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
                     ForEach(people) { person in
-                        PersonCell(
-                            imageURL: person.imageURL,
-                            name: person.name,
-                            subtitle: person.subtitle
-                        )
+                        Button(action: {
+                            onPersonTapped(person)
+                        }) {
+                            PersonCell(details: person)
+                        }
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
             }

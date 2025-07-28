@@ -1,4 +1,4 @@
-struct MovieDTO: Codable {
+struct MovieDTO: Codable, Equatable, Hashable {
     let id: Int
     let title: String
     let overview: String?

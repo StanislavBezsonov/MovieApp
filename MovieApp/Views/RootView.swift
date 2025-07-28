@@ -33,13 +33,16 @@ struct RootView: View {
                 case .moviesByKeyword(let keyword):
                     KeywordSearchResultsView(keyword: keyword)
                 case .similarMovies(let movies):
-                    SimpleMovieListView(title: "Similar Movies", movies: movies)
+                    MoviePreviewListView(title: "Similar Movies", movies: movies)
                 case .recommendedMovies(let movies):
-                    SimpleMovieListView(title: "Recommended Movies", movies: movies)
+                    MoviePreviewListView(title: "Recommended Movies", movies: movies)
                 case .castList(let cast):
-                    FullPeopleListView(title: "Cast", people: cast)
+                    PeoplePreviewListView(title: "Cast", people: cast)
                 case .crewList(let crew):
-                    FullPeopleListView(title: "Crew", people: crew)
+                    PeoplePreviewListView(title: "Crew", people: crew)
+                case .personDetail(let personId):
+                    PersonDetailView(personId: personId)
+
                 }
             }
         }

@@ -1,16 +1,14 @@
 import SwiftUI
 
 struct MoviePreviewCell: View {
-    let posterURL: URL?
-    let title: String
-    let rating: Double?
+    let movie: Movie
 
     private let posterWidth: CGFloat = 100
     private let posterHeight: CGFloat = 150
 
     var body: some View {
         VStack(spacing: 6) {
-            AsyncImage(url: posterURL) { phase in
+            AsyncImage(url: movie.posterURL) { phase in
                 switch phase {
                 case .success(let image):
                     image
@@ -27,14 +25,14 @@ struct MoviePreviewCell: View {
                 }
             }
 
-            Text(title)
+            Text(movie.title)
                 .font(.caption)
                 .lineLimit(1)
                 .truncationMode(.tail)
                 .frame(maxWidth: posterWidth)
                 .multilineTextAlignment(.center)
 
-            if let rating {
+            if let rating = movie.voteAverage {
                 CircularRatingView(rating: rating, textColor: .primary)
                     .padding(.vertical, 2)
             }

@@ -15,7 +15,8 @@ struct OverviewCell: View {
                 .lineLimit(isExpanded ? nil : 4)
                 .font(.body)
                 .foregroundColor(.primary)
-                .fixedSize(horizontal: false, vertical: true)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
             Button(action: {
                 withAnimation(.spring(response: 0.5, dampingFraction: 0.6, blendDuration: 0)) {

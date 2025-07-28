@@ -20,11 +20,7 @@ struct MovieHorizontalSection: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
                     ForEach(movies) { movie in
-                        MoviePreviewCell(
-                            posterURL: movie.posterURL,
-                            title: movie.title,
-                            rating: movie.voteAverage
-                        )
+                        MoviePreviewCell(movie: movie)
                     }
                 }
             }

@@ -1,24 +1,25 @@
 import SwiftUI
 
 struct PersonCell: View {
-    let imageURL: URL?
-    let name: String
-    let subtitle: String?
+    let details: PersonDisplayModel
+    
+    private let imageWidth: CGFloat = 80
+    private let imageHeight: CGFloat = 100
 
     var body: some View {
         VStack(spacing: 4) {
-            AsyncImage(url: imageURL) { phase in
+            AsyncImage(url: details.imageURL) { phase in
                 if let image = phase.image {
                     image
                         .resizable()
                         .scaledToFill()
-                        .frame(width: 80, height: 100)
+                        .frame(width: imageWidth, height: imageHeight)
                         .clipped()
                         .cornerRadius(8)
                 } else {
                     Rectangle()
                         .fill(Color.gray.opacity(0.3))
-                        .frame(width: 80, height: 100)
+                        .frame(width: imageWidth, height: imageHeight)
                         .cornerRadius(8)
                         .overlay(
                             Image(systemName: "photo")
@@ -30,20 +31,20 @@ struct PersonCell: View {
                 }
             }
 
-            Text(name)
+            Text(details.name)
                 .font(.caption)
                 .lineLimit(1)
                 .truncationMode(.tail)
-                .frame(maxWidth: 80)
+                .frame(maxWidth: imageWidth)
                 .multilineTextAlignment(.center)
 
-            if let subtitle {
+            if let subtitle = details.subtitle {
                 Text(subtitle)
                     .font(.caption2)
                     .foregroundColor(.secondary)
                     .lineLimit(1)
                     .truncationMode(.tail)
-                    .frame(maxWidth: 80)
+                    .frame(maxWidth: imageWidth)
                     .multilineTextAlignment(.center)
             }
         }
