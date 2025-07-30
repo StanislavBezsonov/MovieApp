@@ -4,6 +4,7 @@ struct PersonDetailView: View {
     let personId: Int
     
     @StateObject private var viewModel: PersonDetailViewModel
+    @StateObject private var posterVM = PosterListViewModel(images: [])
     
     init(personId: Int, movieService: MovieServiceProtocol = Current.movieService, coordinator: AppCoordinator) {
         self.personId = personId
@@ -28,7 +29,9 @@ struct PersonDetailView: View {
                             .listRowInsets(EdgeInsets())
                     }
                     if let images = details.profileImages?.profiles, !images.isEmpty {
-                        MovieImageSection(title: "Images", images: images) { url in
+                        let posterVM = PosterListViewModel(images: images)
+
+                        MovieImageSection(viewModel: posterVM, title: "Images") { url in
                             PosterImageCell(imageURL: url)
                         }
                     }

@@ -12,19 +12,20 @@ class AppCoordinator: ObservableObject {
         case similarMovies(movies: [Movie])
         case recommendedMovies(movies: [Movie])
         case personDetail(personId: Int)
-    }
-    
-    enum DisplayMode {
-        case verticalList
-        case horizontalList
-    }
+    }    
 
     @Published var path: [ActiveScreen] = []
     @Published var selectedCategory: MovieCategory = .nowPlaying
     @Published var displayMode: DisplayMode = .verticalList
+    @Published var selectedTab: Tab = .categories
     
     func toggleDisplayMode() {
         displayMode = (displayMode == .verticalList) ? .horizontalList : .verticalList
+    }
+    
+    func switchToTab(_ tab: Tab) {
+        selectedTab = tab
+        resetToRoot()
     }
     
     func showCategory(_ category: MovieCategory) {
@@ -74,5 +75,18 @@ class AppCoordinator: ObservableObject {
 
     func resetToRoot() {
         path = []
+    }
+}
+
+extension AppCoordinator {
+    
+    enum DisplayMode {
+        case verticalList
+        case horizontalList
+    }
+    
+    enum Tab: Hashable {
+        case categories
+        case userLists
     }
 }

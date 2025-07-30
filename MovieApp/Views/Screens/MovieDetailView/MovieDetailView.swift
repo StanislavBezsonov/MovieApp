@@ -4,6 +4,8 @@ struct MovieDetailView: View {
     let movieId: Int
     
     @StateObject private var viewModel: MovieDetailViewModel
+    @StateObject private var posterVM = PosterListViewModel(images: [])
+    @StateObject private var backdropVM = PosterListViewModel(images: [])
     
     init(movieId: Int, movieService: MovieServiceProtocol = Current.movieService, coordinator: AppCoordinator? = nil) {
         self.movieId = movieId
@@ -25,7 +27,7 @@ struct MovieDetailView: View {
                     MovieDetailCell(movie: details)
                         .listRowInsets(EdgeInsets())
                         .listRowSeparator(.hidden)
-                    MovieActionCell()
+                    MovieActionCell(movieId: details.id)
                         .listRowInsets(EdgeInsets())
                     
                     if details.hasReviews {
@@ -112,14 +114,14 @@ struct MovieDetailView: View {
                             }
                             
                             
-                            if details.hasPosters, let posters = details.images?.posters {
-                                MovieImageSection(title: "Other Posters", images: posters) { url in
+                            if details.hasPosters {
+                                MovieImageSection(viewModel: posterVM, title: "Other Posters") { url in
                                     PosterImageCell(imageURL: url)
                                 }
                             }
                             
-                            if details.hasBackdrops, let backdrops = details.images?.backdrops {
-                                MovieImageSection(title: "Images", images: backdrops) { url in
+                            if details.hasBackdrops {
+                                MovieImageSection(viewModel: backdropVM, title: "Images") { url in
                                     BackdropImageCell(imageURL: url)
                                 }
                             }
@@ -134,6 +136,14 @@ struct MovieDetailView: View {
         }
         .onAppear {
             viewModel.onViewAppeared()
+        }
+        .onChange(of: viewModel.movieDetail) { detail in
+            if let posters = detail?.images?.posters {
+                posterVM.updateImages(posters)
+            }
+            if let backdrops = detail?.images?.backdrops {
+                backdropVM.updateImages(backdrops)
+            }
         }
     }
 }

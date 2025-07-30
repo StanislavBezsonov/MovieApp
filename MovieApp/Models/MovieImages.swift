@@ -1,6 +1,6 @@
 import Foundation
 
-struct MovieImages {
+struct MovieImages: Equatable {
     let posters: [ImageData]
     let backdrops: [ImageData]
 }

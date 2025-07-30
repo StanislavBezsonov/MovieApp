@@ -1,10 +1,15 @@
 import SwiftUI
+import Combine
 
 struct MovieActionCell: View {
+    var movieLists: UserMoviesManager = UserMoviesManager.shared
+    let movieId: Int
+
+
     var body: some View {
         HStack(spacing: 10) {
             Button(action: {
-                print("Wishlist tapped")
+                movieLists.addToWishlist(movieId)
             }) {
                 Text("Wishlist")
                     .font(.headline)
@@ -16,7 +21,7 @@ struct MovieActionCell: View {
             .buttonStyle(PlainButtonStyle())
             
             Button(action: {
-                print("Seenlist tapped")
+                movieLists.addToSeenlist(movieId)
             }) {
                 Text("Seenlist")
                     .font(.headline)
@@ -27,17 +32,17 @@ struct MovieActionCell: View {
             }
             .buttonStyle(PlainButtonStyle())
             
-            Button(action: {
-                print("List tapped")
-            }) {
-                Text("List")
-                    .font(.headline)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 16)
-                    .background(Color.orange.opacity(0.2))
-                    .cornerRadius(8)
-            }
-            .buttonStyle(PlainButtonStyle())
+//            Button(action: {
+//                print("List tapped")
+//            }) {
+//                Text("List")
+//                    .font(.headline)
+//                    .padding(.vertical, 8)
+//                    .padding(.horizontal, 16)
+//                    .background(Color.orange.opacity(0.2))
+//                    .cornerRadius(8)
+//            }
+//            .buttonStyle(PlainButtonStyle())
         }
         .padding(.horizontal)
     }

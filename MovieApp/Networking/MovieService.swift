@@ -10,6 +10,7 @@ protocol MovieServiceProtocol {
     func fetchTrendingMovies() async throws -> [Movie]
     func fetchMovies(for category: MovieCategory) async throws -> [Movie]
     func fetchGenres() async throws -> [Genre]
+    func fetchMovieByID(_ id: Int) async throws -> Movie
     func fetchMovieDetail(id: Int) async throws -> MovieDetail
     func fetchMoviesByKeyword(_ keywordId: Int) async throws -> [Movie]
     func fetchPersonById(_ id: Int) async throws -> PersonDetail
@@ -133,6 +134,11 @@ final class MovieService: MovieServiceProtocol {
         let response: GenresResponse = try await fetch(from: "/genre/movie/list")
         let genres = response.genres.map { Genre(dto: $0) }
         return genres
+    }
+    
+    func fetchMovieByID(_ id: Int) async throws -> Movie {
+        let dto: MovieDTO = try await fetch(from: "/movie/\(id)")
+        return Movie(dto: dto)
     }
     
     func fetchMovieDetail(id: Int) async throws -> MovieDetail {
