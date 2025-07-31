@@ -3,6 +3,7 @@ import Combine
 
 @MainActor
 final class CustomerListsViewModel: ObservableObject {
+    @Published var selectedList: CustomerListType = .wishlist
     @Published var movies: [Movie] = []
 
     let userMovieList = UserMoviesManager.shared
@@ -20,19 +21,26 @@ final class CustomerListsViewModel: ObservableObject {
 
     func onViewAppeared() {
         Task {
-            await loadWishlistMovies()
+            await loadMovies(for: selectedList)
+        }
+    }
+    
+    func onListChanged(_ newList: CustomerListType) {
+        Task {
+            await loadMovies(for: newList)
         }
     }
 
-    private func loadWishlistMovies() async {
+    private func loadMovies(for list: CustomerListType) async {
+        let saved = userMovieList.getMovies(for: list)
         var result: [Movie] = []
 
-        for id in userMovieList.wishlist {
+        for savedMovie in saved {
             do {
-                let movie = try await movieService.fetchMovieByID(id)
+                let movie = try await movieService.fetchMovieByID(Int(savedMovie.id))
                 result.append(movie)
             } catch {
-                print("Error \(id): \(error)")
+                print("Failed to fetch movie \(savedMovie.id): \(error)")
             }
         }
 

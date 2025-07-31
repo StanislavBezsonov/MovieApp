@@ -9,7 +9,7 @@ struct MovieActionCell: View {
     var body: some View {
         HStack(spacing: 10) {
             Button(action: {
-                movieLists.addToWishlist(movieId)
+                movieLists.addMovie(movieId, to: .wishlist)
             }) {
                 Text("Wishlist")
                     .font(.headline)
@@ -21,7 +21,7 @@ struct MovieActionCell: View {
             .buttonStyle(PlainButtonStyle())
             
             Button(action: {
-                movieLists.addToSeenlist(movieId)
+                movieLists.addMovie(movieId, to: .seenlist)
             }) {
                 Text("Seenlist")
                     .font(.headline)
