@@ -14,6 +14,7 @@
 /* Begin PBXFileReference section */
 		85059D3B2E3BE23200907519 /* SavedMovie+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedMovie+CoreDataClass.swift"; sourceTree = "<group>"; };
 		85059D3C2E3BE23200907519 /* SavedMovie+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedMovie+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		85059D3F2E3BFB9700907519 /* Untitled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Untitled.swift; sourceTree = "<group>"; };
 		85EB9F4D2E2DB8E100519790 /* MovieApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -39,6 +40,7 @@
 		85EB9F442E2DB8E100519790 = {
 			isa = PBXGroup;
 			children = (
+				85059D3F2E3BFB9700907519 /* Untitled.swift */,
 				85059D3B2E3BE23200907519 /* SavedMovie+CoreDataClass.swift */,
 				85059D3C2E3BE23200907519 /* SavedMovie+CoreDataProperties.swift */,
 				85EB9F4F2E2DB8E100519790 /* MovieApp */,
