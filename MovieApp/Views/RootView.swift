@@ -4,73 +4,83 @@ struct RootView: View {
     @EnvironmentObject var coordinator: AppCoordinator
 
     var body: some View {
-        NavigationStack(path: $coordinator.path) {
-            TabView(selection: $coordinator.selectedTab) {
-                Group {
-                    VStack(spacing: 0) {
-                        switch coordinator.displayMode {
-                        case .verticalList:
-                            MoviesCategoriesView(coordinator: coordinator)
-                        case .horizontalList:
-                            MoviesCategoriesHorizontalView(coordinator: coordinator)
-                        }
+        TabView(selection: $coordinator.selectedTab) {
+            
+            // MARK: - Categories Tab
+            NavigationStack(path: $coordinator.categoriesPath) {
+                categoriesView
+                    .navigationDestination(for: AppCoordinator.ActiveScreen.self) { screen in
+                        coordinator.destinationView(for: screen)
                     }
-                    .navigationTitle(coordinator.selectedCategory.rawValue)
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button {
-                                coordinator.toggleDisplayMode()
-                            } label: {
-                                Image(systemName: coordinator.displayMode == .verticalList ? "square.grid.2x2" : "list.bullet")
-                            }
-                        }
-                    }
-                    .tabItem {
-                        Label("Categories", systemImage: "film")
-                    }
-                    .tag(AppCoordinator.Tab.categories)
-                }
-                
-                DiscoverMovieView(coordinator: coordinator)
-                    .tabItem {
-                        Label("Discover", systemImage: "play.square.stack.fill")
-                    }
-                    .tag(AppCoordinator.Tab.discover)
-                
-                FanClubView(title: "Fan Club", coordinator: coordinator)
-                    .tabItem {
-                        Label("Fan Club", systemImage: "star")
-                    }
-                    .tag(AppCoordinator.Tab.fanClub)
-                
-                CustomerListsView(coordinator: coordinator)
-                    .tabItem {
-                        Label("Wishlist", systemImage: "heart")
-                    }
-                    .tag(AppCoordinator.Tab.userLists)
             }
-            .navigationDestination(for: AppCoordinator.ActiveScreen.self) { screen in
-                switch screen {
-                case .movieDetail(let movieId):
-                    MovieDetailView(movieId: movieId, coordinator: coordinator)
-                case .reviews(let reviews):
-                    ReviewsView(reviews: reviews)
-                case .moviesByKeyword(let keyword):
-                    KeywordSearchResultsView(keyword: keyword, coordinator: coordinator)
-                case .similarMovies(let movies):
-                    MoviePreviewListView(title: "Similar Movies", movies: movies, coordinator: coordinator)
-                case .recommendedMovies(let movies):
-                    MoviePreviewListView(title: "Recommended Movies", movies: movies, coordinator: coordinator)
-                case .castList(let cast):
-                    PeoplePreviewListView(title: "Cast", people: cast, coordinator: coordinator)
-                case .crewList(let crew):
-                    PeoplePreviewListView(title: "Crew", people: crew, coordinator: coordinator)
-                case .personDetail(let personId):
-                    PersonDetailView(personId: personId, coordinator: coordinator)
+            .tabItem {
+                Label("Categories", systemImage: "film")
+            }
+            .tag(AppCoordinator.Tab.categories)
+
+            // MARK: - Discover Tab
+            NavigationStack(path: $coordinator.discoverPath) {
+                DiscoverMovieView(coordinator: coordinator)
+                    .navigationTitle("Discover")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationDestination(for: AppCoordinator.ActiveScreen.self) { screen in
+                        coordinator.destinationView(for: screen)
+                    }
+            }
+            .tabItem {
+                Label("Discover", systemImage: "play.square.stack.fill")
+            }
+            .tag(AppCoordinator.Tab.discover)
+
+            // MARK: - Fan Club Tab
+            NavigationStack(path: $coordinator.fanClubPath) {
+                FanClubView(coordinator: coordinator)
+                    .navigationTitle("Fan Club")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationDestination(for: AppCoordinator.ActiveScreen.self) { screen in
+                        coordinator.destinationView(for: screen)
+                    }
+            }
+            .tabItem {
+                Label("Fan Club", systemImage: "star")
+            }
+            .tag(AppCoordinator.Tab.fanClub)
+
+            // MARK: - User Lists Tab
+            NavigationStack(path: $coordinator.userListsPath) {
+                CustomerListsView(coordinator: coordinator)
+                    .navigationTitle("My Lists")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationDestination(for: AppCoordinator.ActiveScreen.self) { screen in
+                        coordinator.destinationView(for: screen)
+                    }
+            }
+            .tabItem {
+                Label("Wishlist", systemImage: "heart")
+            }
+            .tag(AppCoordinator.Tab.userLists)
+        }
+    }
+
+    private var categoriesView: some View {
+        VStack(spacing: 0) {
+            switch coordinator.displayMode {
+            case .verticalList:
+                MoviesCategoriesView(coordinator: coordinator)
+            case .horizontalList:
+                MoviesCategoriesHorizontalView(coordinator: coordinator)
+            }
+        }
+        .navigationTitle(coordinator.selectedCategory.rawValue)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    coordinator.toggleDisplayMode()
+                } label: {
+                    Image(systemName: coordinator.displayMode == .verticalList ? "square.grid.2x2" : "list.bullet")
                 }
             }
         }
     }
 }
-

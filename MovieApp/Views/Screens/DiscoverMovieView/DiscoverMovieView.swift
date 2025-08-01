@@ -7,6 +7,10 @@ struct DiscoverMovieView: View {
     }
     
     var body: some View {
-        Text("Hello, World!")
+        VStack {
+            
+        }
+        .background(Color.white.edgesIgnoringSafeArea(.all))
     }
+    
 }

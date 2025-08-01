@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct FanClubPersonCell: View {
-    let imageHeight: CGFloat = 150
+    let imageHeight: CGFloat = 135
     let imageWidth: CGFloat = 100
     
     let person: Person
