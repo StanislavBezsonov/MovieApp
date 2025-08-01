@@ -8,6 +8,7 @@ struct MoviesCategoriesView: View {
     }
 
     var body: some View {
+        
         TabView(selection: $viewModel.selectedCategory) {
             ForEach(MovieCategory.allCases, id: \.self) { category in
                 MoviesListView(category: category, coordinator: viewModel.coordinator)
@@ -15,6 +16,7 @@ struct MoviesCategoriesView: View {
             }
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+        .accentColor(.red)
         .navigationTitle(viewModel.selectedCategory.rawValue)
         .navigationBarTitleDisplayMode(.inline)
     }

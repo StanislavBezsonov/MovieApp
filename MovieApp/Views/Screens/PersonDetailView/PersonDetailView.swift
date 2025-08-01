@@ -6,6 +6,8 @@ struct PersonDetailView: View {
     @StateObject private var viewModel: PersonDetailViewModel
     @StateObject private var posterVM = PosterListViewModel(images: [])
     
+    private let favoriteStorage = FavoritePersonStorage()
+
     init(personId: Int, movieService: MovieServiceProtocol = Current.movieService, coordinator: AppCoordinator) {
         self.personId = personId
         _viewModel = StateObject(wrappedValue: PersonDetailViewModel(personId: personId, movieService: movieService, coordinator: coordinator))
@@ -30,7 +32,7 @@ struct PersonDetailView: View {
                     }
                     if let images = details.profileImages?.profiles, !images.isEmpty {
                         let posterVM = PosterListViewModel(images: images)
-
+                        
                         MovieImageSection(viewModel: posterVM, title: "Images") { url in
                             PosterImageCell(imageURL: url)
                         }
@@ -49,6 +51,15 @@ struct PersonDetailView: View {
             }
         }
         .navigationTitle(viewModel.title)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    viewModel.toggleStarred()
+                } label: {
+                    Image(systemName: viewModel.isStarred ? "star.fill" : "star")
+                }
+            }
+        }
         .onAppear {
             viewModel.onViewAppear()
         }

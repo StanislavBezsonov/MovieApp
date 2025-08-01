@@ -1,10 +1,11 @@
 import SwiftUI
 
 struct FanClubPersonCell: View {
-    let imageHeight: CGFloat = 135
-    let imageWidth: CGFloat = 100
+    let imageHeight: CGFloat = 100
+    let imageWidth: CGFloat = 75
     
     let person: Person
+    let onTap: (() -> Void)?
     
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
@@ -44,5 +45,9 @@ struct FanClubPersonCell: View {
             .frame(maxHeight: imageHeight, alignment: .center)
         }
         .frame(maxWidth: .infinity, minHeight: imageHeight, alignment: .leading)
-    }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            onTap?()
+        }
+    }    
 }

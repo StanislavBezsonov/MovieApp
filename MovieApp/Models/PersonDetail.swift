@@ -69,3 +69,12 @@ struct PersonDetail: Identifiable, Equatable, Hashable {
         return formatter.string(from: date)
     }
 }
+
+extension PersonDetail {
+    var normalizedPopularity: Double {
+        guard let popularity = self.popularity else { return 0 }
+        let maxPopularity = 25.0
+        let clamped = min(popularity, maxPopularity)
+        return clamped / maxPopularity * 10
+    }
+}

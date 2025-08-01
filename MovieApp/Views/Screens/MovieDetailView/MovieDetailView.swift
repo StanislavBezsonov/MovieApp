@@ -7,9 +7,9 @@ struct MovieDetailView: View {
     @StateObject private var posterVM = PosterListViewModel(images: [])
     @StateObject private var backdropVM = PosterListViewModel(images: [])
     
-    init(movieId: Int, movieService: MovieServiceProtocol = Current.movieService, coordinator: AppCoordinator? = nil) {
+    init(movieId: Int, movieService: MovieServiceProtocol = Current.movieService, userMoviesList: UserMoviesStorage = UserMoviesStorage(), coordinator: AppCoordinator? = nil) {
         self.movieId = movieId
-        _viewModel = StateObject(wrappedValue: MovieDetailViewModel(movieId: movieId, movieService: movieService, coordinator: coordinator))
+        _viewModel = StateObject(wrappedValue: MovieDetailViewModel(movieId: movieId, movieService: movieService, userMoviesList: userMoviesList, coordinator: coordinator))
     }
     
     var body: some View {
@@ -27,7 +27,7 @@ struct MovieDetailView: View {
                     MovieDetailCell(movie: details)
                         .listRowInsets(EdgeInsets())
                         .listRowSeparator(.hidden)
-                    MovieActionCell(movieId: details.id)
+                    MovieActionCell(movieLists: viewModel.userMoviesList, movieId: details.id)
                         .listRowInsets(EdgeInsets())
                     
                     if details.hasReviews {

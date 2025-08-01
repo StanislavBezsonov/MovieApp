@@ -10,14 +10,33 @@
 		85EB9F4D2E2DB8E100519790 /* MovieApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		8505A2502E3C167000907519 /* CoreData */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = CoreData;
-			sourceTree = "<group>";
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		85D5686E2E3D2DB500A5DF11 /* Exceptions for "MovieApp" folder in "MovieApp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				CoreData/MovieModel.xcdatamodeld,
+			);
+			target = 85EB9F4C2E2DB8E100519790 /* MovieApp */;
 		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		85D5686F2E3D2DB500A5DF11 /* Exceptions for "MovieApp" folder in "Compile Sources" phase from "MovieApp" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 85EB9F492E2DB8E100519790 /* Sources */;
+			membershipExceptions = (
+				CoreData/MovieModel.xcdatamodeld,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
 		85EB9F4F2E2DB8E100519790 /* MovieApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				85D5686E2E3D2DB500A5DF11 /* Exceptions for "MovieApp" folder in "MovieApp" target */,
+				85D5686F2E3D2DB500A5DF11 /* Exceptions for "MovieApp" folder in "Compile Sources" phase from "MovieApp" target */,
+			);
 			path = MovieApp;
 			sourceTree = "<group>";
 		};
@@ -37,7 +56,6 @@
 		85EB9F442E2DB8E100519790 = {
 			isa = PBXGroup;
 			children = (
-				8505A2502E3C167000907519 /* CoreData */,
 				85EB9F4F2E2DB8E100519790 /* MovieApp */,
 				85EB9F4E2E2DB8E100519790 /* Products */,
 			);
@@ -67,7 +85,6 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				8505A2502E3C167000907519 /* CoreData */,
 				85EB9F4F2E2DB8E100519790 /* MovieApp */,
 			);
 			name = MovieApp;

@@ -4,7 +4,7 @@ struct PosterImageCell: View {
     let imageURL: URL?
 
     private let imageWidth: CGFloat = 100
-    private let imageHeight: CGFloat = 150
+    private let imageHeight: CGFloat = 130
 
     var body: some View {
         VStack {

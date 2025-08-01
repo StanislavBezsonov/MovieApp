@@ -7,13 +7,15 @@ final class MovieDetailViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     
+    let userMoviesList: UserMoviesStorage
     private let movieId: Int
     private let movieService: MovieServiceProtocol
     weak var coordinator: AppCoordinator? = nil
 
-    init(movieId: Int, movieService: MovieServiceProtocol, coordinator: AppCoordinator?) {
+    init(movieId: Int, movieService: MovieServiceProtocol, userMoviesList: UserMoviesStorage, coordinator: AppCoordinator?) {
         self.movieId = movieId
         self.movieService = movieService
+        self.userMoviesList = userMoviesList
         self.coordinator = coordinator
     }
     

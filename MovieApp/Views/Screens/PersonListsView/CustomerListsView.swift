@@ -32,6 +32,7 @@ struct CustomerListsView: View {
                     .contentShape(Rectangle())
                 }
             }
+            .listStyle(.plain)
         }
         .onAppear {
             viewModel.onViewAppeared()

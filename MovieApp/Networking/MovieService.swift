@@ -13,10 +13,10 @@ protocol MovieServiceProtocol {
     func fetchMovieByID(_ id: Int) async throws -> Movie
     func fetchMovieDetail(id: Int) async throws -> MovieDetail
     func fetchMoviesByKeyword(_ keywordId: Int) async throws -> [Movie]
-    func fetchPersonById(_ id: Int) async throws -> PersonDetail
     func fetchPersonImages(personId: Int) async throws -> PersonImages
     func fetchMovieCredits(forPersonId id: Int) async throws -> [Movie]
     func fetchPersonByIdRaw(_ id: Int) async throws -> PersonDetailDTO
+    func fetchPersonById(_ id: Int) async throws -> Person
     func fetchPopularPersons() async throws -> [Person]
 }
 
@@ -181,14 +181,13 @@ final class MovieService: MovieServiceProtocol {
         return movies
     }
     
-    func fetchPersonById(_ id: Int) async throws -> PersonDetail {
-        let response: PersonDetailDTO = try await fetch(from: "/person/\(id)")
-        let person = PersonDetail(dto: response)
-        return person
-    }
-    
     func fetchPersonByIdRaw(_ id: Int) async throws -> PersonDetailDTO {
         return try await fetch(from: "/person/\(id)")
+    }
+    
+    func fetchPersonById(_ id: Int) async throws -> Person {
+        let dto: PersonDTO = try await fetch(from: "/person/\(id)")
+        return Person(dto: dto)
     }
     
     func fetchPersonImages(personId: Int) async throws -> PersonImages {

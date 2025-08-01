@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct MovieActionCell: View {
-    var movieLists: UserMoviesManager = UserMoviesManager.shared
+    var movieLists: UserMoviesStorage
     let movieId: Int
     
     @State private var isInWishlist = false

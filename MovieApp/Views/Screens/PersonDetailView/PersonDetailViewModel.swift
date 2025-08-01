@@ -7,9 +7,11 @@ final class PersonDetailViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     @Published var movies: [Movie] = []
+    @Published var isStarred: Bool = false
     
     private let personId: Int
     private let movieService: MovieServiceProtocol
+    private let favoriteStorage: FavoritePersonStorage
     weak var coordinator: AppCoordinator?
     
     var moviesByYear: [(year: String, movies: [Movie])] {
@@ -20,15 +22,17 @@ final class PersonDetailViewModel: ObservableObject {
         personDetail?.name ?? "Person"
     }
     
-    init(personId: Int, movieService: MovieServiceProtocol, coordinator: AppCoordinator?) {
+    init(personId: Int, movieService: MovieServiceProtocol, favoriteStorage: FavoritePersonStorage = FavoritePersonStorage(), coordinator: AppCoordinator?) {
         self.personId = personId
         self.movieService = movieService
+        self.favoriteStorage = favoriteStorage
         self.coordinator = coordinator
     }
     
     func onViewAppear() {
         Task {
             await loadPersonDetails()
+            checkIfStarred()
         }
     }
     
@@ -86,6 +90,19 @@ final class PersonDetailViewModel: ObservableObject {
         }
 
         return result
+    }
+    
+    func checkIfStarred() {
+        isStarred = favoriteStorage.isStarred(personId: personId)
+    }
+
+    func toggleStarred() {
+        if isStarred {
+            favoriteStorage.removeStarred(personId: personId)
+        } else {
+            favoriteStorage.addStarred(personId: personId)
+        }
+        isStarred.toggle()
     }
 }
 

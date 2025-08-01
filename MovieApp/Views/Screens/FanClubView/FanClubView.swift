@@ -10,12 +10,35 @@ struct FanClubView: View {
     
     var body: some View {
         VStack {
-            List {
-                ForEach(viewModel.fanClub) { person in
-                    FanClubPersonCell(person: person)
+            if !viewModel.favoritePersons.isEmpty {
+                List {
+                    Section(header: Text("Favorites")) {
+                        ForEach(viewModel.favoritePersons) { person in
+                            FanClubPersonCell(person: person) {
+                                viewModel.personTapped(person)
+                            }
+                        }
+                    }
+
+                    Section(header: Text("Popular")) {
+                        ForEach(viewModel.fanClub) { person in
+                            FanClubPersonCell(person: person) {
+                                viewModel.personTapped(person)
+                            }
+                        }
+                    }
                 }
+                .listStyle(.plain)
+            } else {
+                List {
+                    ForEach(viewModel.fanClub) { person in
+                        FanClubPersonCell(person: person) {
+                            viewModel.personTapped(person)
+                        }
+                    }
+                }
+                .listStyle(.plain)
             }
-            .listStyle(.plain)
         }
         .background(Color.white.edgesIgnoringSafeArea(.all))
         .onAppear {

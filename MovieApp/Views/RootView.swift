@@ -60,6 +60,7 @@ struct RootView: View {
             }
             .tag(AppCoordinator.Tab.userLists)
         }
+//        .tint(.red)
     }
 
     private var categoriesView: some View {

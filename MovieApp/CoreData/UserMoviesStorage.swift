@@ -1,8 +1,11 @@
 import CoreData
 
-final class UserMoviesManager {
-    static let shared = UserMoviesManager()
-    private let context = PersistenceController.shared.context
+final class UserMoviesStorage {
+    private let context: NSManagedObjectContext
+
+    init(context: NSManagedObjectContext = PersistenceController.shared.context) {
+        self.context = context
+    }
 
     func getMovies(for listType: CustomerListType) -> [SavedMovie] {
         let request: NSFetchRequest<SavedMovie> = SavedMovie.fetchRequest()
@@ -16,8 +19,8 @@ final class UserMoviesManager {
         }
     }
     
-    func addMovie(_ id:Int, to listType: CustomerListType) {
-        let existing = getMovies(for: listType).first {$0.id == id }
+    func addMovie(_ id: Int, to listType: CustomerListType) {
+        let existing = getMovies(for: listType).first { $0.id == id }
         if existing != nil { return }
         
         let movie = SavedMovie(context: context)
@@ -39,7 +42,7 @@ final class UserMoviesManager {
         } catch {
             print("Failed to delete movie: \(error)")
         }
-    }    
+    }
     
     func isMovie(_ id: Int, in listType: CustomerListType) -> Bool {
         let request: NSFetchRequest<SavedMovie> = SavedMovie.fetchRequest()
@@ -56,10 +59,12 @@ final class UserMoviesManager {
     }
     
     private func saveContext() {
-        do {
-            try context.save()
-        } catch {
-            print("Failed to save context: \(error)")
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                print("Failed to save context: \(error)")
+            }
         }
     }
 }

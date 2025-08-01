@@ -8,12 +8,13 @@ final class CustomerListsViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
 
-    let userMovieList = UserMoviesManager.shared
+    let userMoviesList: UserMoviesStorage
     private let movieService: MovieServiceProtocol
     weak var coordinator: AppCoordinator?
 
-    init(movieService: MovieServiceProtocol, coordinator: AppCoordinator?) {
+    init(movieService: MovieServiceProtocol, userMovieList: UserMoviesStorage = UserMoviesStorage(), coordinator: AppCoordinator?) {
         self.movieService = movieService
+        self.userMoviesList = userMovieList
         self.coordinator = coordinator
     }
 
@@ -37,7 +38,7 @@ final class CustomerListsViewModel: ObservableObject {
         isLoading = true
         defer { isLoading = false }
 
-        let saved = userMovieList.getMovies(for: list)
+        let saved = userMoviesList.getMovies(for: list)
 
         var result: [Movie] = []
 
