@@ -25,7 +25,7 @@ struct CustomerListsView: View {
                     MovieListCell(
                         viewModel: MovieListCellModel(
                             movie: movie,
-                            onMoviePressed: {                                                                    viewModel.movieTapped(movie)
+                            onMoviePressed: {                                                  viewModel.movieTapped(movie)
                             }
                         )
                     )

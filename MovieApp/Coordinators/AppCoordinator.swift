@@ -87,6 +87,8 @@ extension AppCoordinator {
     
     enum Tab: Hashable {
         case categories
+        case discover
+        case fanClub
         case userLists
     }
 }

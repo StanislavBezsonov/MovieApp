@@ -31,10 +31,20 @@ struct RootView: View {
                     }
                     .tag(AppCoordinator.Tab.categories)
                 }
-
+                
+                DiscoverMovieView(coordinator: coordinator)
+                    .tabItem {
+                        Label("Discover", systemImage: "play.square.stack.fill")
+                    }
+                    .tag(AppCoordinator.Tab.discover)
+                
+                FanClubView(title: "Fan Club", coordinator: coordinator)
+                    .tabItem {
+                        Label("Fan Club", systemImage: "star")
+                    }
+                    .tag(AppCoordinator.Tab.fanClub)
+                
                 CustomerListsView(coordinator: coordinator)
-                    .navigationTitle("My Lists")
-                    .navigationBarTitleDisplayMode(.inline)
                     .tabItem {
                         Label("Wishlist", systemImage: "heart")
                     }

@@ -39,6 +39,20 @@ final class UserMoviesManager {
         } catch {
             print("Failed to delete movie: \(error)")
         }
+    }    
+    
+    func isMovie(_ id: Int, in listType: CustomerListType) -> Bool {
+        let request: NSFetchRequest<SavedMovie> = SavedMovie.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %d AND listType == %@", id, listType.rawValue)
+        request.fetchLimit = 1
+        
+        do {
+            let count = try context.count(for: request)
+            return count > 0
+        } catch {
+            print("Failed to check movie in \(listType): \(error)")
+            return false
+        }
     }
     
     private func saveContext() {

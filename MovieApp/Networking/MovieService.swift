@@ -16,7 +16,8 @@ protocol MovieServiceProtocol {
     func fetchPersonById(_ id: Int) async throws -> PersonDetail
     func fetchPersonImages(personId: Int) async throws -> PersonImages
     func fetchMovieCredits(forPersonId id: Int) async throws -> [Movie]
-    func fetchPersonByIdRaw(_ id: Int) async throws -> PersonDTO
+    func fetchPersonByIdRaw(_ id: Int) async throws -> PersonDetailDTO
+    func fetchPopularPersons() async throws -> [Person]
 }
 
 // MARK: - Custom Errors
@@ -181,12 +182,12 @@ final class MovieService: MovieServiceProtocol {
     }
     
     func fetchPersonById(_ id: Int) async throws -> PersonDetail {
-        let response: PersonDTO = try await fetch(from: "/person/\(id)")
+        let response: PersonDetailDTO = try await fetch(from: "/person/\(id)")
         let person = PersonDetail(dto: response)
         return person
     }
     
-    func fetchPersonByIdRaw(_ id: Int) async throws -> PersonDTO {
+    func fetchPersonByIdRaw(_ id: Int) async throws -> PersonDetailDTO {
         return try await fetch(from: "/person/\(id)")
     }
     
@@ -209,5 +210,10 @@ final class MovieService: MovieServiceProtocol {
         }
 
         return Array(uniqueMoviesDict.values)
+    }
+    
+    func fetchPopularPersons() async throws -> [Person] {
+        let response: PersonsResponse = try await fetch(from: "/person/popular")
+        return response.results.map { Person(dto: $0) }
     }
 }

@@ -1,4 +1,4 @@
-struct PersonDTO: Codable {
+struct PersonDetailDTO: Codable {
     let id: Int
     let name: String
     let birthday: String?

@@ -3,21 +3,19 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		85059D3D2E3BE23200907519 /* SavedMovie+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85059D3C2E3BE23200907519 /* SavedMovie+CoreDataProperties.swift */; };
-		85059D3E2E3BE23200907519 /* SavedMovie+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85059D3B2E3BE23200907519 /* SavedMovie+CoreDataClass.swift */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
-		85059D3B2E3BE23200907519 /* SavedMovie+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedMovie+CoreDataClass.swift"; sourceTree = "<group>"; };
-		85059D3C2E3BE23200907519 /* SavedMovie+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedMovie+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		85EB9F4D2E2DB8E100519790 /* MovieApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		8505A2502E3C167000907519 /* CoreData */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		85EB9F4F2E2DB8E100519790 /* MovieApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = MovieApp;
@@ -39,8 +37,7 @@
 		85EB9F442E2DB8E100519790 = {
 			isa = PBXGroup;
 			children = (
-				85059D3B2E3BE23200907519 /* SavedMovie+CoreDataClass.swift */,
-				85059D3C2E3BE23200907519 /* SavedMovie+CoreDataProperties.swift */,
+				8505A2502E3C167000907519 /* CoreData */,
 				85EB9F4F2E2DB8E100519790 /* MovieApp */,
 				85EB9F4E2E2DB8E100519790 /* Products */,
 			);
@@ -70,6 +67,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				8505A2502E3C167000907519 /* CoreData */,
 				85EB9F4F2E2DB8E100519790 /* MovieApp */,
 			);
 			name = MovieApp;
@@ -128,8 +126,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				85059D3D2E3BE23200907519 /* SavedMovie+CoreDataProperties.swift in Sources */,
-				85059D3E2E3BE23200907519 /* SavedMovie+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

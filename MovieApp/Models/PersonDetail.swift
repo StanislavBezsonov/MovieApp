@@ -25,7 +25,7 @@ struct PersonDetail: Identifiable, Equatable, Hashable {
         return ageComponents.year
     }
     
-    init(dto: PersonDTO,
+    init(dto: PersonDetailDTO,
          profileImages: PersonImages? = nil
     ) {
         self.id = dto.id

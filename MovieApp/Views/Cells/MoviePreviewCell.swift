@@ -22,6 +22,13 @@ struct MoviePreviewCell: View {
                         .fill(Color.gray.opacity(0.3))
                         .frame(width: posterWidth, height: posterHeight)
                         .cornerRadius(8)
+                        .overlay(
+                            Image(systemName: "photo")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 40, height: 40)
+                                .foregroundColor(.gray)
+                        )
                 }
             }
 

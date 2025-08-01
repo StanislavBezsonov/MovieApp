@@ -5,6 +5,8 @@ import Combine
 final class CustomerListsViewModel: ObservableObject {
     @Published var selectedList: CustomerListType = .wishlist
     @Published var movies: [Movie] = []
+    @Published var isLoading: Bool = false
+    @Published var errorMessage: String?
 
     let userMovieList = UserMoviesManager.shared
     private let movieService: MovieServiceProtocol
@@ -32,18 +34,33 @@ final class CustomerListsViewModel: ObservableObject {
     }
 
     private func loadMovies(for list: CustomerListType) async {
+        isLoading = true
+        defer { isLoading = false }
+
         let saved = userMovieList.getMovies(for: list)
+
         var result: [Movie] = []
 
-        for savedMovie in saved {
-            do {
-                let movie = try await movieService.fetchMovieByID(Int(savedMovie.id))
-                result.append(movie)
-            } catch {
-                print("Failed to fetch movie \(savedMovie.id): \(error)")
+        await withTaskGroup(of: Movie?.self) { group in
+            for savedMovie in saved {
+                group.addTask {
+                    do {
+                        return try await self.movieService.fetchMovieByID(Int(savedMovie.id))
+                    } catch {
+                        print("Failed to load \(savedMovie.id): \(error)")
+                        return nil
+                    }
+                }
+            }
+
+            for await movie in group {
+                if let movie = movie {
+                    result.append(movie)
+                }
             }
         }
 
         self.movies = result
     }
 }
+
