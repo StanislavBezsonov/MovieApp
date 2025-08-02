@@ -31,11 +31,11 @@ struct SwipeCardView: View {
                                 .clipped()
                                 .cornerRadius(12)
                         case .failure:
-                            Color.gray.frame(width: cardWidth, height: cardHeight).cornerRadius(12)
+                            placeholderImage(width: cardWidth, height: cardHeight)
                         case .empty:
-                            ProgressView().frame(width: cardWidth, height: cardHeight)
+                            placeholderImage(width: cardWidth, height: cardHeight)
                         @unknown default:
-                            EmptyView()
+                            placeholderImage(width: cardWidth, height: cardHeight)
                         }
                     }
                     
@@ -87,6 +87,21 @@ struct SwipeCardView: View {
                         }
                     }
             )
+        }
+    }
+    
+    private func placeholderImage(width: CGFloat, height: CGFloat) -> some View {
+        ZStack {
+            Color.gray.opacity(0.3)
+                .frame(width: width, height: height)
+                .cornerRadius(6)
+                .border(Color.white, width: 2)
+                .padding(.trailing, 8)
+            Image(systemName: "photo")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 40, height: 40)
+                .foregroundColor(.white.opacity(0.7))
         }
     }
     

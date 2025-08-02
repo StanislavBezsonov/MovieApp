@@ -15,11 +15,11 @@ struct MoviesListView: View {
                     MovieListCell(
                         viewModel: MovieListCellModel(
                             movie: movie,                                                                onMoviePressed: {                                                                    viewModel.movieTapped(movie)
-                                }
+                            }
                         )
                     )
                     .contentShape(Rectangle())
-
+                    
                 }
             }
             .listStyle(PlainListStyle())

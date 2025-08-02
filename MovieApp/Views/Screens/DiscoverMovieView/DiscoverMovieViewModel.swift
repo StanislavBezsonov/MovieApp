@@ -7,16 +7,27 @@ final class DiscoverMovieViewModel: ObservableObject {
     @Published var movies: [Movie] = []
     @Published var topCardOffset: CGSize = .zero
     @Published var sortBy: String = "popularity.desc"
-    @Published var releaseYear: Int = Calendar.current.component(.year, from: Date())
+    @Published var releaseYear: Int
+    @Published var selectedGenre: Genre? = nil
+    @Published var genres: [Genre] = []
 
     private let movieService: MovieServiceProtocol
     private let storage: UserMoviesStorage
     private let coordinator: AppCoordinator?
+    private let ignoredStorage: IgnoredMoviesStorage
+    private var currentPage = 1
+    private var allPagesLoaded = false
     
-    init(movieService: MovieServiceProtocol, storage: UserMoviesStorage, coordinator: AppCoordinator?) {
+    init(movieService: MovieServiceProtocol, storage: UserMoviesStorage, ignoredStorage: IgnoredMoviesStorage, coordinator: AppCoordinator?) {
         self.movieService = movieService
         self.storage = storage
+        self.ignoredStorage = ignoredStorage
         self.coordinator = coordinator
+        self.releaseYear = DiscoverMovieViewModel.startOfDecade(for: Calendar.current.component(.year, from: Date()))
+    }
+    
+    static func startOfDecade(for year: Int) -> Int {
+        return (year / 10) * 10
     }
     
     func onViewAppeared() {
@@ -25,19 +36,98 @@ final class DiscoverMovieViewModel: ObservableObject {
         }
     }
     
-    private func loadMovies() async {
+    func onSheetAppeared() {
+        Task {
+            await loadGenres()
+        }
+    }
+    
+    func onFilterChanged() {
+        Task {
+            await loadMovies(reset: true)
+        }
+    }
+    
+    private func loadGenres() async {
+        do {
+            genres = try await movieService.fetchGenres()
+        } catch {
+            print("Failed to load genres: \(error.localizedDescription)")
+        }
+    }
+    
+    func loadMovies(reset: Bool = false) async {
+        guard !isLoading else { return }
+        
         isLoading = true
         defer { isLoading = false }
 
-        do {
-            let query: [URLQueryItem] = [
-                URLQueryItem(name: "sort_by", value: sortBy),
-                URLQueryItem(name: "year", value: "\(releaseYear)")
-            ]
-            movies = try await movieService.discoverMovies(queryItems: query)
-        } catch {
-            errorMessage = "Failed to load movies \(error.localizedDescription)"
+        if reset {
+            currentPage = 1
+            allPagesLoaded = false
+            movies.removeAll()
         }
+
+        while !allPagesLoaded {
+            var queryItems: [URLQueryItem] = [
+                URLQueryItem(name: "sort_by", value: sortBy),
+                URLQueryItem(name: "primary_release_date.gte", value: "\(releaseYear)-01-01"),
+                URLQueryItem(name: "primary_release_date.lte", value: "\(releaseYear + 9)-12-31"),
+                URLQueryItem(name: "page", value: "\(currentPage)")
+            ]
+
+            if let genre = selectedGenre {
+                queryItems.append(URLQueryItem(name: "with_genres", value: "\(genre.id)"))
+            }
+
+            do {
+                let fetchedMovies = try await movieService.discoverMovies(queryItems: queryItems)
+                let ignoredIDs = Set(ignoredStorage.getAllIgnoredMovies().map { Int($0.id) })
+                let filteredMovies = fetchedMovies.filter { !ignoredIDs.contains($0.id) }
+
+                if filteredMovies.isEmpty {
+                    if fetchedMovies.isEmpty {
+                        allPagesLoaded = true
+                        break
+                    } else {
+                        currentPage += 1
+                        continue
+                    }
+                } else {
+                    movies.append(contentsOf: filteredMovies)
+                    currentPage += 1
+                    break
+                }
+            } catch {
+                errorMessage = "Failed to load movies: \(error.localizedDescription)"
+                break
+            }
+        }
+    }
+
+    
+    func indexForDecade(from year: Int, in decades: [String]) -> Int? {
+        let decade = (year / 10) * 10
+        return decades.firstIndex(of: "\(decade)s")
+    }
+    
+    func randomizeFilters(from decades: [String]) -> Int? {
+        let sortOptions = ["popularity.desc", "vote_average.desc", "release_date.desc"]
+        sortBy = sortOptions.randomElement() ?? "popularity.desc"
+
+        var updatedDecadeIndex: Int? = nil
+
+        if let randomDecade = decades.randomElement() {
+            let yearString = randomDecade.replacingOccurrences(of: "s", with: "")
+            if let year = Int(yearString) {
+                releaseYear = DiscoverMovieViewModel.startOfDecade(for: year)
+                updatedDecadeIndex = decades.firstIndex(of: randomDecade)
+            }
+        }
+
+        selectedGenre = genres.randomElement()
+
+        return updatedDecadeIndex
     }
 }
 
@@ -98,6 +188,7 @@ extension DiscoverMovieViewModel {
     func handleSwipe(movie: Movie, direction: SwipeDirection) {
         movies.removeAll { $0.id == movie.id }
         resetSwipeOffset()
+        ignoredStorage.addIgnoredMovie(movie.id)
 
         switch direction {
         case .left:
@@ -110,6 +201,12 @@ extension DiscoverMovieViewModel {
             }
         case .down:
             break
+        }
+        
+        if movies.count <= 2 && !allPagesLoaded {
+            Task {
+                await loadMovies()
+            }
         }
     }
     

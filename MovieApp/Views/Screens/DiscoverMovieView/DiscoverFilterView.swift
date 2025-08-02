@@ -4,59 +4,69 @@ struct DiscoverFilterView: View {
     @ObservedObject var viewModel: DiscoverMovieViewModel
     @Environment(\.dismiss) var dismiss
     
-    private let decades = [
-        "2020-2029",
-        "2010-2019",
-        "2000-2009",
-        "1990-1999",
-        "1980-1989",
-        "1970-1979"
-    ]
-    
     @State private var selectedDecadeIndex: Int = 0
+    
+    private var decades: [String] {
+        Array(stride(from: 2020, through: 1950, by: -10)).map { "\($0)s" }
+    }
     
     var body: some View {
         Form {
-            Picker("Sort by", selection: $viewModel.sortBy) {
-                Text("Popularity").tag("popularity.desc")
-                Text("Rating").tag("vote_average.desc")
-                Text("Release Date").tag("release_date.desc")
-            }
-            
-            Picker("Release Decade", selection: $selectedDecadeIndex) {
-                ForEach(decades.indices, id: \.self) { index in
-                    Text(decades[index]).tag(index)
+            Section {
+                Picker("Sort by", selection: $viewModel.sortBy) {
+                    Text("Popularity").tag("popularity.desc")
+                    Text("Rating").tag("vote_average.desc")
+                    Text("Release Date").tag("release_date.desc")
+                }
+                
+                Picker("Release Decade", selection: $selectedDecadeIndex) {
+                    ForEach(decades.indices, id: \.self) { index in
+                        Text(decades[index]).tag(index)
+                    }
+                }
+                .onChange(of: selectedDecadeIndex) { newIndex in
+                    let yearString = decades[newIndex].replacingOccurrences(of: "s", with: "")
+                    if let year = Int(yearString) {
+                        viewModel.releaseYear = year
+                    }
+                }
+                
+                if !viewModel.genres.isEmpty {
+                    Picker("Genre", selection: $viewModel.selectedGenre) {
+                        Text("Any").tag(Genre?.none)
+                        ForEach(viewModel.genres, id: \.id) { genre in
+                            Text(genre.name).tag(Genre?.some(genre))
+                        }
+                    }
                 }
             }
             
-            Button("Save and filter movies") {
-                let selectedDecade = decades[selectedDecadeIndex]
-                if let startYearString = selectedDecade.split(separator: "-").first,
-                   let startYear = Int(startYearString) {
-                    viewModel.releaseYear = startYear
-                }
-                Task {
-                    viewModel.onViewAppeared()
+            Section {
+                Button("Save and filter movies") {
+                    viewModel.onFilterChanged()
                     dismiss()
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .tint(.green)
+
+                Button("Randomize filters", role: .destructive) {
+                    if let index = viewModel.randomizeFilters(from: decades) {
+                        selectedDecadeIndex = index
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                Button("Cancel", role: .cancel) {
+                    dismiss()
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .frame(maxWidth: .infinity, alignment: .center)
         }
         .navigationTitle("Settings")
         .onAppear {
-            selectedDecadeIndex = indexForYear(viewModel.releaseYear)
+            viewModel.onSheetAppeared()
+            selectedDecadeIndex = viewModel.indexForDecade(from: viewModel.releaseYear, in: decades) ?? 0
+
         }
-    }
-    
-    private func indexForYear(_ year: Int) -> Int {
-        for (index, decade) in decades.enumerated() {
-            let parts = decade.split(separator: "-")
-            if let start = Int(parts[0]), let end = Int(parts[1]) {
-                if year >= start && year <= end {
-                    return index
-                }
-            }
-        }
-        return 0
     }
 }

@@ -29,7 +29,7 @@ struct PersonMoviesCell: View {
                     .lineLimit(4)
                 
                 if let rating = movie.voteAverage {
-                    CircularRatingView(rating: rating, textColor: .appBlack)
+                    CircularRatingView(rating: rating, textColor: .black)
                 }
             }
             .frame(maxHeight: imageHeight, alignment: .center)

@@ -56,10 +56,9 @@ struct PersonMainDetailsCell: View {
                         .foregroundColor(.secondary)
                 }
                 
-                if let popularity = person.popularity {
-                    CircularRatingView(rating: person.normalizedPopularity, textColor: .black)
-                        .frame(width: 44, height: 44)
-                }
+                CircularRatingView(rating: person.normalizedPopularity, textColor: .black)
+                    .frame(width: 44, height: 44)
+                
             }
             .frame(maxHeight: imageHeight, alignment: .center)
         }

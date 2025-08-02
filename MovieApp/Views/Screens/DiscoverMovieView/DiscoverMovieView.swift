@@ -3,9 +3,14 @@ import SwiftUI
 struct DiscoverMovieView: View {
     @StateObject private var viewModel: DiscoverMovieViewModel
     @State private var showingSettings = false
-
+    
     init(coordinator: AppCoordinator) {
-        _viewModel = StateObject(wrappedValue: DiscoverMovieViewModel(movieService: MovieService(), storage: UserMoviesStorage(), coordinator: coordinator))
+        _viewModel = StateObject(
+            wrappedValue:
+                DiscoverMovieViewModel(movieService: MovieService(),
+                                       storage: UserMoviesStorage(),
+                                       ignoredStorage: IgnoredMoviesStorage(),
+                                       coordinator: coordinator))
     }
     
     var body: some View {
@@ -18,7 +23,7 @@ struct DiscoverMovieView: View {
                     .foregroundColor(.white)
                     .cornerRadius(8)
                     .opacity(message.opacity)
-                    .offset(y: -250)
+                    .offset(y: -300)
                     .zIndex(1000)
             }
             
@@ -56,7 +61,9 @@ struct DiscoverMovieView: View {
             }
         }
         .sheet(isPresented: $showingSettings) {
-            DiscoverFilterView(viewModel: viewModel)
+            NavigationView {
+                DiscoverFilterView(viewModel: viewModel)
+            }
         }
         .onAppear {
             viewModel.onViewAppeared()

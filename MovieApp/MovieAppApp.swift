@@ -11,6 +11,19 @@ import SwiftUI
 struct MovieAppApp: App {
     @StateObject private var coordinator = AppCoordinator()
     
+    init() {
+        let appearance = UITabBarAppearance()
+        appearance.configureWithDefaultBackground()
+        appearance.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterial)
+        appearance.backgroundColor = .clear
+
+        let tabBar = UITabBar.appearance()
+        tabBar.standardAppearance = appearance
+        if #available(iOS 15.0, *) {
+            tabBar.scrollEdgeAppearance = appearance
+        }
+    }
+    
     var body: some Scene {
         WindowGroup {
             RootView()

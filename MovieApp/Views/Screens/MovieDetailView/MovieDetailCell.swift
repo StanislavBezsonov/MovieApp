@@ -3,6 +3,9 @@ import SwiftUI
 struct MovieDetailCell: View {
     let movie: MovieDetail
     
+    private let posterWidth: CGFloat = 110
+    private let posterHeight: CGFloat = 165
+    
     var body: some View {
         
         VStack(alignment: .leading, spacing: 0) {
@@ -14,17 +17,23 @@ struct MovieDetailCell: View {
                             image
                                 .resizable()
                                 .scaledToFill()
-                                .frame(width: 110, height: 165)
+                                .frame(width: posterWidth, height: posterHeight)
                                 .clipped()
                                 .cornerRadius(6)
-                                .border(Color(AppColors.white), width: 2)
+                                .border(Color(.white), width: 2)
                                 .padding(.trailing, 8)
-                        default:
-                            ProgressView()
-                                .frame(width: 100, height: 150)
+                        case .failure(_):
+                            placeholderImage
+                        case .empty:
+                            placeholderImage
+                        @unknown default:
+                            placeholderImage
                         }
                     }
+                } else {
+                    placeholderImage
                 }
+                
                 VStack(alignment: .leading, spacing: 4) {
                     
                     HStack(alignment: .center, spacing: 6) {
@@ -39,24 +48,24 @@ struct MovieDetailCell: View {
                         }
                     }
                     .font(.subheadline)
-                    .foregroundColor(.appWhite)
+                    .foregroundColor(.white)
                     .padding(.top, 14)
                     
                     if let country = movie.productionCountries?.first {
                         Text(country.name)
                             .font(.subheadline)
-                            .foregroundColor(.appWhite)
+                            .foregroundColor(.white)
                     }
                     
                     HStack(alignment: .center, spacing: 12) {
                         if let average = movie.voteAverage {
-                            CircularRatingView(rating: average, textColor: .appWhite)
+                            CircularRatingView(rating: average, textColor: .white)
                                 .frame(width: 44, height: 44)
                         }
                         if let voteCount = movie.voteCount {
                             Text("\(voteCount) ratings")
                                 .font(.subheadline)
-                                .foregroundColor(.appWhite)
+                                .foregroundColor(.white)
                         }
                     }
                     .padding(.top, 10)
@@ -70,7 +79,11 @@ struct MovieDetailCell: View {
                             Text(genre.name)
                                 .padding(.horizontal, 10)
                                 .padding(.vertical, 6)
-                                .background(Color(AppColors.white))
+                                .background(Color.white)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.black, lineWidth: 1)
+                                )
                                 .cornerRadius(10)
                                 .font(.caption)
                         }
@@ -99,4 +112,18 @@ struct MovieDetailCell: View {
         .clipShape(RoundedRectangle(cornerRadius: 16))
     }
     
+    private var placeholderImage: some View {
+            ZStack {
+                Color.gray.opacity(0.3)
+                    .frame(width: posterWidth, height: posterHeight)
+                    .cornerRadius(6)
+                    .border(Color.white, width: 2)
+                    .padding(.trailing, 8)
+                Image(systemName: "photo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 40, height: 40)
+                    .foregroundColor(.white.opacity(0.7))
+            }
+        }
 }

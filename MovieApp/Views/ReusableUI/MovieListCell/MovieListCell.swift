@@ -48,7 +48,7 @@ struct MovieListCell: View {
                         .lineLimit(2)
                     
                     HStack(spacing: 8) {
-                        CircularRatingView(rating: viewModel.voteAverageValue, textColor: .appBlack)
+                        CircularRatingView(rating: viewModel.voteAverageValue, textColor: .black)
                         
                         Text(viewModel.formattedReleaseDate)
                             .font(.subheadline)
